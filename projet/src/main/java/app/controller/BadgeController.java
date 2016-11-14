@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
+ * This class offers REST standard operations for a Badge.
  *
- * @author Ayoubo
+ * @author M-H. Aghamahdi, J. Ayoub, S. Baehler, M. Monzione
+ * @date 14 Nov 2016
  */
 @RestController
 public class BadgeController {
