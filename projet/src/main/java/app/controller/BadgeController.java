@@ -22,10 +22,7 @@ import java.util.LinkedList;
 @RestController
 public class BadgeController {
     LinkedList<Badge> badgesList = new LinkedList<Badge>();
-    Badge b1 = new Badge(1 , "name", "name", "Image1");
     int count = 0;
-
-
 
      @RequestMapping("/badge")
     public Badge badge(@RequestParam(value="id") int id) {
@@ -44,9 +41,24 @@ public class BadgeController {
     }
 
     @RequestMapping(value = "/badge", method = RequestMethod.POST)
-    public Badge doLogin(@RequestParam String name) {
-        Badge b = new Badge(++count, name, name, name);
+    public Badge doPost(@RequestParam String name, String desc, String image) {
+        Badge b = new Badge(++count, name, desc, image);
         badgesList.add(b);
         return b;
+    }
+    @RequestMapping(value = "/badge", method = RequestMethod.PUT)
+    public Badge doLPut(@RequestParam int id, String name, String desc, String image) {
+        for(int i = 0; i < badgesList.size(); i++) {
+            if (badgesList.get(i).getId() == id) {
+                if (name != null)
+                    badgesList.get(i).setName(name);
+                if (desc != null)
+                    badgesList.get(i).setDescription(desc);
+                if (image != null)
+                    badgesList.get(i).setIcon(image);
+            }
+            return badgesList.get(i);
+        }
+        return null;
     }
 }
