@@ -3,9 +3,14 @@
  */
 package app.model;
 
+
 /**
- * @author J. Ayoub
- *
+ * This class represents a level. Each level has a unique Id, a numericalName, a name, a description and an icon.
+ * 
+ * Once set, the id can not be changed.
+ * 
+ * @author M-H. Aghamahdi, J. Ayoub, S. Baehler, M. Monzione
+ * @date 14 Nov 2016
  */
 public class Level {
 
@@ -15,9 +20,18 @@ public class Level {
 	private       String description;
 	private       String icon;
 	
-	public Level(long iD, int numericalName, String name, String description, String icon) {
+	/**
+	 * This is the only constructor for a level. It requires all the parameters.
+	 * 
+	 * @param iD
+	 * @param numericalName
+	 * @param name
+	 * @param description
+	 * @param icon
+	 */
+	public Level(long id, int numericalName, String name, String description, String icon) {
 		super();
-		ID = iD;
+		ID = id;
 		this.numericalName = numericalName;
 		this.name = name;
 		this.description = description;
