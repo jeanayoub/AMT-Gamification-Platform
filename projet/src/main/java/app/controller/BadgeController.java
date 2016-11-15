@@ -28,8 +28,14 @@ public class BadgeController {
 
 
      @RequestMapping("/badge")
-    public Badge badge(@RequestParam(value="desc", defaultValue="World") String name) {
-        return new Badge(1 , "name", name, "Image1");
+    public Badge badge(@RequestParam(value="id") int id) {
+         for(int i = 0; i < badgesList.size(); i++) {
+            if(badgesList.get(i).getId() == id)
+            {
+                return badgesList.get(i);
+            }
+         }
+         return null;
     }
 
     @RequestMapping("/badges")
