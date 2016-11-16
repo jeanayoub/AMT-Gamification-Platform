@@ -5,9 +5,11 @@ package app.controller;
 
 
 import app.model.Badge;
+import app.model.BadgesRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -18,7 +20,8 @@ import java.util.LinkedList;
  */
 @RestController
 public class BadgeController {
-    LinkedList<Badge> badgesList = new LinkedList<Badge>();
+   
+    BadgesRepository badgesRepository;
     int count = 0;
 
     /**
@@ -28,16 +31,9 @@ public class BadgeController {
      * @param id
      * @return le badge avec l'id en param, null si rien n'est trouvé
      */
-     @RequestMapping("/badges/{id}")
-    public Badge badge(@PathVariable("id") int id) {
-         for(int i = 0; i < badgesList.size(); i++) {
-            if(badgesList.get(i).getID() == id)
-            {
-                return badgesList.get(i);
-            }
-         }
-         
-         return null;
+    @RequestMapping("/badges/{id}")
+    public Badge badge(@PathVariable("id") long id) {
+        return badgesRepository.findOne(id);
     }
 
 
@@ -49,8 +45,8 @@ public class BadgeController {
      * @return retourne tous les badges
      */
     @RequestMapping("/badges")
-    public LinkedList badges() {
-        return badgesList;
+    public List badges() {
+        return badgesRepository.findAll();
     }
 
     /**

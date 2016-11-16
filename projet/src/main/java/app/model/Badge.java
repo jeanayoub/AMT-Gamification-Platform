@@ -3,6 +3,11 @@
  */
 package app.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 
 /**
  * This class represents a badge. Each badge has a unique Id, a name, a description and an icon.
@@ -12,9 +17,12 @@ package app.model;
  * @author M-H. Aghamahdi, J. Ayoub, S. Baehler, M. Monzione
  * @date 14 Nov 2016
  */
+@Entity
 public class Badge {
 
-	private final long   ID;
+        @Id
+        @GeneratedValue(strategy=GenerationType.AUTO)
+	private       long   ID;
 	private       String name;
 	private       String description;
 	private       String icon;
