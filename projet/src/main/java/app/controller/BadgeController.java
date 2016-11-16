@@ -6,10 +6,17 @@ package app.controller;
 
 import app.model.Badge;
 import app.model.BadgesRepository;
+import java.net.URI;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 /**
@@ -22,6 +29,14 @@ import java.util.List;
 public class BadgeController {
    
     BadgesRepository badgesRepository;
+    
+    
+    @Autowired
+    BadgeController(BadgesRepository badgesRepository) {
+            this.badgesRepository = badgesRepository;
+    }
+    
+    
     int count = 0;
 
     /**
@@ -45,22 +60,32 @@ public class BadgeController {
      * @return retourne tous les badges
      */
     @RequestMapping("/badges")
-    public List badges() {
+    public LinkedList badges() {
         return badgesRepository.findAll();
     }
 
     /**
      * post et retourne le badge passé en parametre
      *
+     * @param payload
+     * @param response
      * @date 15 Nov 2016
-     * @param name desc image
      * @return lpost et retourne badge avec l'id en param, null si rien n'est trouvé
      */
     @RequestMapping(value = "/badges", method = RequestMethod.POST)
-    public Badge doPost(@RequestParam String name, String desc, String image) {
-        Badge b = new Badge(++count, name, desc, image);
-        badgesList.add(b);
-        return b;
+    //@ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> doPost(@RequestBody Badge badge, HttpServletResponse response) {
+ 
+        badgesRepository.save(badge);
+    
+        response.setStatus(HttpServletResponse.SC_CREATED);
+
+        
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(badge.getID()).toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
     /**
@@ -70,7 +95,7 @@ public class BadgeController {
      * @param name desc image
      * @return modifie et retourne badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
+  /*  @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
     public Badge doLPut(@PathVariable("id") int id , @RequestParam String name, String desc, String image) {
         for(int i = 0; i < badgesList.size(); i++) {
             if (badgesList.get(i).getID() == id) {
@@ -84,7 +109,7 @@ public class BadgeController {
             return badgesList.get(i);
         }
         return null;
-    }
+    }*/
 
     /**
      * delete le badge passé en parametre
@@ -94,13 +119,8 @@ public class BadgeController {
      * @return delete badge avec l'id en param, null si rien n'est trouvé
      */
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.DELETE)
-    public Badge doDelete(@PathVariable("id") int id) {
-        for(int i = 0; i < badgesList.size(); i++) {
-                if(badgesList.get(i).getID() == id)
-                {
-                    badgesList.remove(i);
-                }
-            }
+    public Badge doDelete(@PathVariable("id") long id) {
+        badgesRepository.delete(id);
         return null;
     }
 }

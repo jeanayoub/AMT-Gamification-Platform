@@ -7,11 +7,11 @@ package app.model;
  */
 
 
-import java.util.List;
+import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 
 
 public interface  BadgesRepository extends CrudRepository <Badge, Long> {
 
-     List<Badge> findAll();
+      LinkedList<Badge> findAll();
 }

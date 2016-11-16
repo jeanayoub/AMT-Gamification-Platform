@@ -35,12 +35,15 @@ public class Badge {
 	 * @param description
 	 * @param icon
 	 */
-	public Badge(long id, String name, String description, String icon) {
-		this.ID          = id;
+	public Badge(String name, String description, String icon) {
 		this.name        = name;
 		this.description = description;
 		this.icon        = icon;
 	}
+        
+        public Badge(){
+            
+        }
 
 	public String getName() {
 		return name;
