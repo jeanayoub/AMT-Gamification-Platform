@@ -39,13 +39,15 @@ public class PointScaleController {
 
     @RequestMapping(value = "/PointScales", method = RequestMethod.POST)
     public PointScale doPost(@RequestBody Map<String, Object> payload) {
-        System.out.println(payload);
         PointScale l = new PointScale(++count, payload.get("name").toString(), payload.get("desc").toString(), payload.get("image").toString());
         PointScalesList.add(l);
         return l;
     }
     @RequestMapping(value = "/PointScales/{id}", method = RequestMethod.PUT)
-    public PointScale doLPut(@PathVariable("id") int id, @RequestParam String name, String desc, String image) {
+    public PointScale doLPut(@PathVariable("id") int id, @RequestBody Map<String, Object> payload) {
+        String name = payload.get("name").toString();
+        String desc = payload.get("desc").toString();
+        String image = payload.get("image").toString();
         for(int i = 0; i <  PointScalesList.size(); i++) {
             if ( PointScalesList.get(i).getID() == id) {
                 if (name != null)
