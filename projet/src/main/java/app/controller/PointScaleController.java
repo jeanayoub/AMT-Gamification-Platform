@@ -8,6 +8,7 @@ import app.model.PointScale;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * This class offers REST standard operations for a PointScale.
@@ -37,9 +38,10 @@ public class PointScaleController {
     }
 
     @RequestMapping(value = "/PointScales", method = RequestMethod.POST)
-    public PointScale doPost(@RequestParam String name, String desc, String image) {
-        PointScale l = new PointScale(++count, name, desc, image);
-         PointScalesList.add(l);
+    public PointScale doPost(@RequestBody Map<String, Object> payload) {
+        System.out.println(payload);
+        PointScale l = new PointScale(++count, payload.get("name").toString(), payload.get("desc").toString(), payload.get("image").toString());
+        PointScalesList.add(l);
         return l;
     }
     @RequestMapping(value = "/PointScales/{id}", method = RequestMethod.PUT)
