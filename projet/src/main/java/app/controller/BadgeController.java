@@ -39,6 +39,7 @@ public class BadgeController {
                 return badgesList.get(i);
             }
          }
+         
          return null;
     }
 
