@@ -74,7 +74,7 @@ public class BadgeController {
      * @param name desc image
      * @return modifie et retourne badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/badges", method = RequestMethod.PUT)
+    @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
     public Badge doLPut(@PathVariable("id") int id , @RequestParam String name, String desc, String image) {
         for(int i = 0; i < badgesList.size(); i++) {
             if (badgesList.get(i).getID() == id) {
