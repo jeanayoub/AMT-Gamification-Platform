@@ -5,10 +5,7 @@ package app.controller;
 
 
 import app.model.Badge;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 
@@ -31,10 +28,10 @@ public class BadgeController {
      * @param id
      * @return le badge avec l'id en param, null si rien n'est trouvé
      */
-     @RequestMapping("/badge")
-    public Badge badge(@RequestParam int id) {
+     @RequestMapping("/badges/{id}")
+    public Badge badge(@PathVariable("id") int id) {
          for(int i = 0; i < badgesList.size(); i++) {
-            if(badgesList.get(i).getId() == id)
+            if(badgesList.get(i).getID() == id)
             {
                 return badgesList.get(i);
             }
@@ -62,7 +59,7 @@ public class BadgeController {
      * @param name desc image
      * @return lpost et retourne badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/badge", method = RequestMethod.POST)
+    @RequestMapping(value = "/badges", method = RequestMethod.POST)
     public Badge doPost(@RequestParam String name, String desc, String image) {
         Badge b = new Badge(++count, name, desc, image);
         badgesList.add(b);
@@ -76,10 +73,10 @@ public class BadgeController {
      * @param name desc image
      * @return modifie et retourne badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/badge", method = RequestMethod.PUT)
-    public Badge doLPut(@RequestParam int id, String name, String desc, String image) {
+    @RequestMapping(value = "/badges", method = RequestMethod.PUT)
+    public Badge doLPut(@PathVariable("id") int id , @RequestParam String name, String desc, String image) {
         for(int i = 0; i < badgesList.size(); i++) {
-            if (badgesList.get(i).getId() == id) {
+            if (badgesList.get(i).getID() == id) {
                 if (name != null)
                     badgesList.get(i).setName(name);
                 if (desc != null)
@@ -89,6 +86,24 @@ public class BadgeController {
             }
             return badgesList.get(i);
         }
+        return null;
+    }
+
+    /**
+     * delete le badge passé en parametre
+     *
+     * @date 15 Nov 2016
+     * @param id
+     * @return delete badge avec l'id en param, null si rien n'est trouvé
+     */
+    @RequestMapping(value = "/badges/{id}", method = RequestMethod.DELETE)
+    public Badge doDelete(@PathVariable("id") int id) {
+        for(int i = 0; i < badgesList.size(); i++) {
+                if(badgesList.get(i).getID() == id)
+                {
+                    badgesList.remove(i);
+                }
+            }
         return null;
     }
 }
