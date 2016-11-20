@@ -4,17 +4,15 @@
 package app.controller;
 
 
+import DTO.BadgeDTO;
 import app.model.Badge;
 import app.model.BadgesRepository;
 import java.net.URI;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -74,7 +72,7 @@ public class BadgeController {
      */
     @RequestMapping(value = "/badges", method = RequestMethod.POST)
     //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> doPost(@RequestBody Badge badge, HttpServletResponse response) {
+    public ResponseEntity doPost(@RequestBody Badge badge, HttpServletResponse response) {
  
         badgesRepository.save(badge);
     
@@ -95,21 +93,21 @@ public class BadgeController {
      * @param name desc image
      * @return modifie et retourne badge avec l'id en param, null si rien n'est trouvé
      */
-  /*  @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
-    public Badge doLPut(@PathVariable("id") int id , @RequestParam String name, String desc, String image) {
-        for(int i = 0; i < badgesList.size(); i++) {
-            if (badgesList.get(i).getID() == id) {
-                if (name != null)
-                    badgesList.get(i).setName(name);
-                if (desc != null)
-                    badgesList.get(i).setDescription(desc);
-                if (image != null)
-                    badgesList.get(i).setIcon(image);
-            }
-            return badgesList.get(i);
-        }
-        return null;
-    }*/
+    @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
+    public ResponseEntity doLPut(@PathVariable("id") Long id , HttpServletResponse response, @RequestBody Badge badge) {
+        
+        badgesRepository.findOne(id).setName(badge.getName());
+        badgesRepository.findOne(id).setDescription(badge.getDescription());
+        badgesRepository.findOne(id).setIcon(badge.getIcon());
+      
+        response.setStatus(HttpServletResponse.SC_CREATED);
+       
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(id).toUri();
+
+        return ResponseEntity.created(location).build();
+    }
 
     /**
      * delete le badge passé en parametre
@@ -119,8 +117,34 @@ public class BadgeController {
      * @return delete badge avec l'id en param, null si rien n'est trouvé
      */
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.DELETE)
-    public Badge doDelete(@PathVariable("id") long id) {
+    public ResponseEntity doDelete(@PathVariable("id") long id, HttpServletResponse response) {
+        
         badgesRepository.delete(id);
-        return null;
+        
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+       
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand().toUri();
+
+        return ResponseEntity.created(location).build();
     }
+    
+    
+    
+     public BadgeDTO toDTO(Badge badge){
+       
+         return new BadgeDTO(badge.getID(),
+                             badge.getName(),
+                             badge.getDescription(),
+                             badge.getIcon());
+     }
+     
+     public Badge fromDTO(BadgeDTO badgeDTO){
+        
+         return new Badge(badgeDTO.getID(),
+                         badgeDTO.getName(),
+                         badgeDTO.getDescription(),
+                         badgeDTO.getIcon());
+     }
 }

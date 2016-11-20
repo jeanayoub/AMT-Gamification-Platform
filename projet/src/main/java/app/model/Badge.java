@@ -41,6 +41,13 @@ public class Badge {
 		this.icon        = icon;
 	}
         
+        public Badge(Long ID, String name, String description, String icon) {
+		this.ID          = ID;
+                this.name        = name;
+		this.description = description;
+		this.icon        = icon;
+	}
+        
         public Badge(){
             
         }
@@ -72,7 +79,5 @@ public class Badge {
 	public long getID() {
 		return ID;
 	}
-	
-	
 }
 

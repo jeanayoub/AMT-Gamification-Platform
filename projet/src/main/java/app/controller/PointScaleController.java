@@ -4,11 +4,18 @@
 package app.controller;
 
 
+import app.model.BadgesRepository;
 import app.model.PointScale;
+import app.model.PointScaleRepository;
+import java.net.URI;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * This class offers REST standard operations for a PointScale.
@@ -18,48 +25,55 @@ import java.util.Map;
  */
 @RestController
 public class PointScaleController {
-    LinkedList<PointScale> PointScalesList = new LinkedList<PointScale>();
-    int count = 0;
+    
+    PointScaleRepository pointScaleRepository;
+    
+    
+    @Autowired
+    PointScaleController(PointScaleRepository pointScaleRepository) {
+            this.pointScaleRepository = pointScaleRepository;
+    }
 
     @RequestMapping("/PointScales/{id}")
-    public PointScale badge(@PathVariable("id") int id) {
-        for(int i = 0; i <  PointScalesList.size(); i++) {
-            if( PointScalesList.get(i).getID() == id)
-            {
-                return  PointScalesList.get(i);
-            }
-        }
-        return null;
+    public PointScale badge(@PathVariable("id") long id) {
+        return  pointScaleRepository.findOne(id);
     }
 
     @RequestMapping("/PointScales")
     public LinkedList badges() {
-        return  PointScalesList;
+        return  pointScaleRepository.findAll();
     }
 
     @RequestMapping(value = "/PointScales", method = RequestMethod.POST)
-    public PointScale doPost(@RequestBody Map<String, Object> payload) {
-        PointScale l = new PointScale(++count, payload.get("name").toString(), payload.get("desc").toString(), payload.get("image").toString());
-        PointScalesList.add(l);
-        return l;
+    public ResponseEntity<?> doPost(@RequestBody PointScale pointScale, HttpServletResponse response) {
+        
+        pointScaleRepository.save(pointScale);
+        
+        response.setStatus(HttpServletResponse.SC_CREATED);
+
+        
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(pointScale.getID()).toUri();
+
+        return ResponseEntity.created(location).build();
     }
+    
+    
     @RequestMapping(value = "/PointScales/{id}", method = RequestMethod.PUT)
-    public PointScale doLPut(@PathVariable("id") int id, @RequestBody Map<String, Object> payload) {
-        String name = payload.get("name").toString();
-        String desc = payload.get("desc").toString();
-        String image = payload.get("image").toString();
-        for(int i = 0; i <  PointScalesList.size(); i++) {
-            if ( PointScalesList.get(i).getID() == id) {
-                if (name != null)
-                     PointScalesList.get(i).setName(name);
-                if (desc != null)
-                     PointScalesList.get(i).setDescription(desc);
-                if (image != null)
-                     PointScalesList.get(i).setIcon(image);
-            }
-            return  PointScalesList.get(i);
-        }
-        return null;
+    public ResponseEntity<?> doLPut(@PathVariable("id") long id, @RequestBody PointScale pointScale, HttpServletResponse response) {
+    
+        pointScaleRepository.findOne(id).setName(pointScale.getName());
+        pointScaleRepository.findOne(id).setDescription(pointScale.getDescription());
+        pointScaleRepository.findOne(id).setIcon(pointScale.getIcon());
+        
+        response.setStatus(HttpServletResponse.SC_CREATED);
+       
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(id).toUri();
+
+        return ResponseEntity.created(location).build();
     }
 
 
@@ -71,13 +85,20 @@ public class PointScaleController {
      * @return delete pointScale avec l'id en param, null si rien n'est trouvé
      */
     @RequestMapping(value = "/PointScales/{id}", method = RequestMethod.DELETE)
-    public PointScale doDelete(@PathVariable("id") int id) {
-        for(int i = 0; i < PointScalesList.size(); i++) {
-            if(PointScalesList.get(i).getID() == id)
-            {
-                PointScalesList.remove(i);
-            }
-        }
-        return null;
+    public ResponseEntity doDelete(@PathVariable("id") long id, HttpServletResponse response) {
+        
+        pointScaleRepository.delete(id);
+        
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+       
+        URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand().toUri();
+
+        return ResponseEntity.created(location).build();
+        
     }
+    
+     
+    
 }
