@@ -33,9 +33,7 @@ public class BadgeController {
     BadgeController(BadgesRepository badgesRepository) {
             this.badgesRepository = badgesRepository;
     }
-    
-    
-    int count = 0;
+
 
     /**
      * retourne le badge passé en parametre

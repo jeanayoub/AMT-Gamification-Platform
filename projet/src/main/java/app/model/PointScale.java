@@ -3,6 +3,11 @@
  */
 package app.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 
 /**
  * This class represents a level. Each level has a unique Id, a numericalName, a name, a description and an icon.
@@ -12,9 +17,13 @@ package app.model;
  * @author M-H. Aghamahdi, J. Ayoub, S. Baehler, M. Monzione
  * @date 14 Nov 2016
  */
+
+@Entity
 public class PointScale {
 
-	private final long   ID;
+        @Id
+        @GeneratedValue(strategy=GenerationType.AUTO)
+	private       long   ID;
 	private       String name;
 	private       String description;
 	private       String icon;
@@ -34,6 +43,10 @@ public class PointScale {
 		this.description = description;
 		this.icon = icon;
 	}
+        
+        public PointScale(){
+            
+        }
 
 	public String getName() {
 		return name;
