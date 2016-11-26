@@ -4,14 +4,12 @@
 package app.controller;
 
 
-import app.model.BadgesRepository;
 import app.model.PointScale;
 import app.model.PointScaleRepository;
 import java.net.URI;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
-import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,17 +32,17 @@ public class PointScaleController {
             this.pointScaleRepository = pointScaleRepository;
     }
 
-    @RequestMapping("/PointScales/{id}")
+    @RequestMapping("/pointScale/{id}")
     public PointScale badge(@PathVariable("id") long id) {
         return  pointScaleRepository.findOne(id);
     }
 
-    @RequestMapping("/PointScales")
+    @RequestMapping("/pointScales")
     public LinkedList badges() {
         return  pointScaleRepository.findAll();
     }
 
-    @RequestMapping(value = "/PointScales", method = RequestMethod.POST)
+    @RequestMapping(value = "/pointScale", method = RequestMethod.POST)
     public ResponseEntity<?> doPost(@RequestBody PointScale pointScale, HttpServletResponse response) {
         
         pointScaleRepository.save(pointScale);
@@ -60,8 +58,8 @@ public class PointScaleController {
     }
     
     
-    @RequestMapping(value = "/PointScales/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<?> doLPut(@PathVariable("id") long id, @RequestBody PointScale pointScale, HttpServletResponse response) {
+    @RequestMapping(value = "/pointScale/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<?> doPut(@PathVariable("id") long id, @RequestBody PointScale pointScale, HttpServletResponse response) {
     
         pointScaleRepository.findOne(id).setName(pointScale.getName());
         pointScaleRepository.findOne(id).setDescription(pointScale.getDescription());
@@ -84,7 +82,7 @@ public class PointScaleController {
      * @param id
      * @return delete pointScale avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/PointScales/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/pointScale/{id}", method = RequestMethod.DELETE)
     public ResponseEntity doDelete(@PathVariable("id") long id, HttpServletResponse response) {
         
         pointScaleRepository.delete(id);

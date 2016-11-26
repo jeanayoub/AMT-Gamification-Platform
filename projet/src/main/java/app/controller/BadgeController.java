@@ -5,6 +5,8 @@ package app.controller;
 
 
 import DTO.BadgeDTO;
+import app.model.Application;
+import app.model.ApplicationRepository;
 import app.model.Badge;
 import app.model.BadgesRepository;
 import java.net.URI;
@@ -28,10 +30,13 @@ public class BadgeController {
    
     BadgesRepository badgesRepository;
     
+    ApplicationRepository applicationsRepository;
+    
     
     @Autowired
-    BadgeController(BadgesRepository badgesRepository) {
+    BadgeController(BadgesRepository badgesRepository, ApplicationRepository applicationsRepository) {
             this.badgesRepository = badgesRepository;
+            this.applicationsRepository = applicationsRepository;
     }
 
 
@@ -42,7 +47,7 @@ public class BadgeController {
      * @param id
      * @return le badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping("/badges/{id}")
+    @RequestMapping("/badge/{id}")
     public Badge badge(@PathVariable("id") long id) {
         return badgesRepository.findOne(id);
     }
@@ -68,10 +73,18 @@ public class BadgeController {
      * @date 15 Nov 2016
      * @return lpost et retourne badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/badges", method = RequestMethod.POST)
+    @RequestMapping(value = "/badge", method = RequestMethod.POST)
     //@ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity doPost(@RequestBody Badge badge, HttpServletResponse response) {
+        
+        Application gaps = applicationsRepository.findByName("gaps");
+        if (gaps == null) {
+            gaps = new Application("gaps", "just for a quick and dirty test");
+            applicationsRepository.save(gaps);
+        }
  
+        gaps.getBadges().add(badge);
+        badge.setApplication(gaps);
         badgesRepository.save(badge);
     
         response.setStatus(HttpServletResponse.SC_CREATED);
@@ -91,8 +104,8 @@ public class BadgeController {
      * @param name desc image
      * @return modifie et retourne badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
-    public ResponseEntity doLPut(@PathVariable("id") Long id , HttpServletResponse response, @RequestBody Badge badge) {
+    @RequestMapping(value = "/badge/{id}", method = RequestMethod.PUT)
+    public ResponseEntity doPut(@PathVariable("id") Long id , HttpServletResponse response, @RequestBody Badge badge) {
         
         badgesRepository.findOne(id).setName(badge.getName());
         badgesRepository.findOne(id).setDescription(badge.getDescription());
@@ -114,7 +127,7 @@ public class BadgeController {
      * @param id
      * @return delete badge avec l'id en param, null si rien n'est trouvé
      */
-    @RequestMapping(value = "/badges/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/badge/{id}", method = RequestMethod.DELETE)
     public ResponseEntity doDelete(@PathVariable("id") long id, HttpServletResponse response) {
         
         badgesRepository.delete(id);
