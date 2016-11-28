@@ -63,7 +63,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
         </dependency>
         <!--SpringFox dependencies -->
         <dependency>
@@ -84,12 +83,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-spring</artifactId>
-            <version>1.0.0</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
 </project>
