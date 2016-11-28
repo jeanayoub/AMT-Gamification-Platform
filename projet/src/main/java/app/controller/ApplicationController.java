@@ -6,7 +6,7 @@
 package app.controller;
 
 import app.model.Application;
-import app.model.ApplicationRepository;
+import DAO.ApplicationRepository;
 import java.net.URI;
 import java.util.LinkedList;
 import javax.servlet.http.HttpServletResponse;

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package app.model;
+package DAO;
 
+import app.model.Application;
 import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,17 +1,18 @@
+package DAO;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package app.model;
 
+
+import app.model.Badge;
 import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 
-/**
- *
- * @author marco
- */
-public interface PointScaleRepository extends CrudRepository <PointScale, Long> {
-    LinkedList<PointScale> findAll();
+
+public interface  BadgesRepository extends CrudRepository <Badge, Long> {
+
+      LinkedList<Badge> findAll();
 }

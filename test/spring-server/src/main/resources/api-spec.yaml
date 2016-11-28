@@ -1,0 +1,52 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Gamification Platform API
+  description: |
+   **This is the documentation of the AMT Gamification Platform API**
+host: localhost:8080
+basePath: /api
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /badges:
+    get:
+      responses:
+        200:
+          description:  List all badges
+          schema:
+            title: Badges
+            type: array
+            items:
+              $ref: '#/definitions/Badges'
+    post:
+      parameters:
+        - name: badge
+          in: body
+          description: The info required to create a badge
+          schema:
+            $ref: '#/definitions/Badges'
+          required: true
+      responses:
+        200:
+          description: Make a new badge
+
+definitions:
+  Badges:
+    type: object
+    properties:
+      id:
+        type: Long
+      name:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+
+

@@ -6,9 +6,9 @@ package app.controller;
 
 import DTO.BadgeDTO;
 import app.model.Application;
-import app.model.ApplicationRepository;
+import DAO.ApplicationRepository;
 import app.model.Badge;
-import app.model.BadgesRepository;
+import DAO.BadgesRepository;
 import java.net.URI;
 import org.springframework.web.bind.annotation.*;
 

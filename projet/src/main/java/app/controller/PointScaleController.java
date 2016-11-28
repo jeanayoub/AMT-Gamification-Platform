@@ -5,7 +5,7 @@ package app.controller;
 
 
 import app.model.PointScale;
-import app.model.PointScaleRepository;
+import DAO.PointScaleRepository;
 import java.net.URI;
 import org.springframework.web.bind.annotation.*;
 
