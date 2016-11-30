@@ -5,7 +5,7 @@
  */
 package DAO;
 
-import app.model.Application;
+import cg.heigvd.gamification.model.Application;
 import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 

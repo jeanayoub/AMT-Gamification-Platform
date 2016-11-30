@@ -23,25 +23,25 @@ paths:
             title: Badges
             type: array
             items:
-              $ref: '#/definitions/Badges'
+              $ref: '#/definitions/Badge'
     post:
       parameters:
         - name: badge
           in: body
           description: The info required to create a badge
           schema:
-            $ref: '#/definitions/Badges'
+            $ref: '#/definitions/Badge'
           required: true
       responses:
         200:
           description: Make a new badge
 
 definitions:
-  Badges:
+  Badge:
     type: object
     properties:
       id:
-        type: Long
+        type: integer
       name:
         type: string
       description:

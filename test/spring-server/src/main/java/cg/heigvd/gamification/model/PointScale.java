@@ -1,7 +1,7 @@
 /**
  * 
  */
-package app.model;
+package cg.heigvd.gamification.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

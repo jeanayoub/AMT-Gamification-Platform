@@ -5,7 +5,7 @@
  */
 package DAO;
 
-import app.model.PointScale;
+import cg.heigvd.gamification.model.PointScale;
 import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 

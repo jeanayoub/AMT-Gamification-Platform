@@ -7,7 +7,7 @@ package DAO;
  */
 
 
-import app.model.Badge;
+import cg.heigvd.gamification.model.Badge;
 import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 
