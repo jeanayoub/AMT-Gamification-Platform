@@ -4,7 +4,9 @@ package ch.heigvd.gamification.api;
 import ch.heigvd.gamification.api.ApplicationsApi;
 import ch.heigvd.gamification.api.dto.ApplicationGet;
 import ch.heigvd.gamification.api.dto.ApplicationPost;
+import ch.heigvd.gamification.api.dto.BadgeGet;
 import ch.heigvd.gamification.dao.ApplicationRepository;
+import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
 import java.net.URI;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,11 +37,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class ApplicationsEndpoint implements ApplicationsApi {
 
     ApplicationRepository applicationRepository;
+    BadgesRepository badgesRepository;
     
     
     @Autowired
-    ApplicationsEndpoint(ApplicationRepository applicationRepository) {
+    ApplicationsEndpoint(BadgesRepository badgesRepository, ApplicationRepository applicationRepository) {
             this.applicationRepository = applicationRepository;
+            this.badgesRepository = badgesRepository;
     }
     
     
@@ -70,9 +75,10 @@ public class ApplicationsEndpoint implements ApplicationsApi {
 
     @Override
     @RequestMapping(value = "/applications", method = RequestMethod.POST)
-    public ResponseEntity<Void> applicationsPost(ApplicationPost application) {
+    public ResponseEntity<Void> applicationsPost(@RequestBody ApplicationPost application) {
         
         Application appliToCreate = new Application(application.getName(),
+                                                    application.getPassword(),
                                                     application.getDescription());
         
         applicationRepository.save(appliToCreate);
@@ -98,7 +104,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
 
     @Override
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.PUT) 
-    public ResponseEntity<Object> applicationsIdPut(Long id, ApplicationPost application) {
+    public ResponseEntity<Object> applicationsIdPut(@PathVariable Long id, ApplicationPost application) {
          
         if(applicationRepository.exists(id)){
             applicationRepository.findOne(id).setName(application.getName());
@@ -131,6 +137,30 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         appGetTmp.setBadgesList(listBadgesUrl);
         
         return appGetTmp;  
+    }
+
+    @Override
+    @RequestMapping(value = "/applications/{id}/{idBadge}", method = RequestMethod.GET) 
+    public ResponseEntity<Object> applicationsIdIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
+        
+        if(badgesRepository.findOne(idBadge).getApplication().getId() == id){
+        
+            return ResponseEntity.ok().body(badgeToDTO(badgesRepository.findOne(idBadge)));
+        }
+        
+        return ResponseEntity.ok().body(null);
+    }
+    
+    // SALE
+    public BadgeGet badgeToDTO(Badge badge){
+    
+       
+        BadgeGet badgeGet = new BadgeGet();
+        badgeGet.setId(badge.getId());
+        badgeGet.setName(badge.getName());
+        badgeGet.setDescription(badge.getDescription());
+        badgeGet.setIcon(badge.getIcon());
+        return badgeGet; 
     }
     
 }

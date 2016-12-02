@@ -9,6 +9,7 @@ import ch.heigvd.gamification.api.dto.BadgeGet;
 import ch.heigvd.gamification.api.dto.BadgePost;
 import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
+import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
 import java.net.URI;
 import java.util.LinkedList;
@@ -16,6 +17,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,7 +57,7 @@ public class BadgesEndpoint implements BadgesApi {
     
     @Override
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.GET)    
-    public ResponseEntity<Object> badgesIdGet(Long id) {
+    public ResponseEntity<Object> badgesIdGet(@PathVariable Long id) {
         if(badgesRepository.exists(id)){
             return ResponseEntity.ok().body(toDTO(badgesRepository.findOne(id)));
         }
@@ -63,24 +67,28 @@ public class BadgesEndpoint implements BadgesApi {
 
     @Override
     @RequestMapping(value = "/badges", method = RequestMethod.POST)
-    public ResponseEntity<Void> badgesPost(BadgePost badge) {
+    public ResponseEntity<Void> badgesPost(@RequestBody BadgePost badge, @RequestHeader String token) {
         
-        Badge badgeToCreate = new Badge( badge.getName(),
+        
+        Application appTmp = applicationsRepository.findByName(token);
+        //if(appTmp != null){
+            Badge badgeToCreate = new Badge( badge.getName(),
                                         badge.getDescription(),
-                                        badge.getIcon());
+                                        badge.getIcon(),
+                                        appTmp);
         
-        badgesRepository.save(badgeToCreate);
+            badgesRepository.save(badgeToCreate);
         
-        URI location = ServletUriComponentsBuilder
+            URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest().path("/{id}")
                         .buildAndExpand(badgeToCreate.getId()).toUri();
 
-        return ResponseEntity.created(location).build();
+            return ResponseEntity.created(location).build();
     }
 
     @Override
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> badgesIdDelete(Long id) {
+    public ResponseEntity<Void> badgesIdDelete(@PathVariable Long id) {
         
         if(badgesRepository.exists(id)){
             badgesRepository.delete(id);
@@ -91,7 +99,7 @@ public class BadgesEndpoint implements BadgesApi {
 
     @Override
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> badgesIdPut(Long id, BadgePost badge) {
+    public ResponseEntity<Object> badgesIdPut(@PathVariable Long id, @RequestBody BadgePost badge) {
         
         if(badgesRepository.exists(id)){
         

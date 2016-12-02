@@ -25,6 +25,10 @@ public class Application {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
     private String name;
+    private String password;
+
+   
+    
     private String description;
    
     @OneToMany(mappedBy = "application")
@@ -35,12 +39,21 @@ public class Application {
         
     }
     
-    public Application(String name, String description){
+    public Application(String name, String password, String description){
         this.name = name;
+        this.password = password;
         this.description = description;
     }
     
-      public void setName(String name) {
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public void setName(String name) {
         this.name = name;
     }
 

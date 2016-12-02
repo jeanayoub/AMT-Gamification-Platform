@@ -39,10 +39,11 @@ public class Badge {
      * @param description
      * @param icon
      */
-    public Badge(String name, String description, String icon) {
+    public Badge(String name, String description, String icon, Application application) {
         this.name = name;
         this.description = description;
         this.icon = icon;
+        this.application = application;
     }
 
     public Badge(Long ID, String name, String description, String icon) {
