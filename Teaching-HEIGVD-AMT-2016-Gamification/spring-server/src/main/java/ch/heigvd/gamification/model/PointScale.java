@@ -3,10 +3,14 @@
  */
 package ch.heigvd.gamification.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -21,27 +25,21 @@ import javax.persistence.Id;
 @Entity
 public class PointScale {
 
+
+
         @Id
         @GeneratedValue(strategy=GenerationType.AUTO)
-	private       long   ID;
+	private       long   id;
 	private       String name;
-	private       String description;
-	private       String icon;
+        private       int points;
+        
+        
+        @OneToMany(mappedBy = "pointScale")
+        private List<UserPointScaleAssociation> userList = new ArrayList();
 	
-	/**
-	 * This is the only constructor for a level. It requires all the parameters.
-	 * 
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param icon
-	 */
-	public PointScale(long id, String name, String description, String icon) {
-		super();
-		ID = id;
+	public PointScale(String name, int points) {
 		this.name = name;
-		this.description = description;
-		this.icon = icon;
+                this.points = points;
 	}
         
         public PointScale(){
@@ -49,32 +47,25 @@ public class PointScale {
         }
 
 	public String getName() {
-		return name;
+            return name;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+            this.name = name;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getIcon() {
-		return icon;
-	}
-
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
 
 	public long getID() {
-		return ID;
+            return id;
 	}
+        
+        public int getPoints() {
+            return points;
+        }
+
+        public void setPoints(int points) {
+            this.points = points;
+        }
 	
 	
 	
