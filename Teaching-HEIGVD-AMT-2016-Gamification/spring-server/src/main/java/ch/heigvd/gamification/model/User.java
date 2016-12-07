@@ -27,15 +27,19 @@ public class User {
     private Application application;
     
     @OneToMany(mappedBy = "user")
-     private List<Event> userList = new ArrayList<>();
-    
-    
-   
+    private List<Event> userList = new ArrayList<>();
+
     @OneToMany(mappedBy = "user")
-    private List<PointAward> listPointScale = new ArrayList<>();
+    private List<Award> listAward = new ArrayList<>();
+
+    public User(){
     
-    public void User(){
+    }
     
+    public User(Long userAppId, Application application){
+        this.userAppId = userAppId;
+        this.application = application;
+             
     }
     
     public long getId() {

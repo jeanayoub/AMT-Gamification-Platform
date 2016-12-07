@@ -25,20 +25,18 @@ import javax.persistence.OneToMany;
 @Entity
 public class PointScale {
 
-
-
         @Id
         @GeneratedValue(strategy=GenerationType.AUTO)
 	private       long   id;
 	private       String name;
         private       int points;
         
-        
-        @OneToMany(mappedBy = "pointScale")
-        private List<PointAward> userList = new ArrayList();
 	
         @OneToMany(mappedBy = "pointScale")
         private List<Rule> RuleList = new ArrayList();
+        
+        @OneToMany(mappedBy = "pointScale")
+        private List<Award> listAward = new ArrayList<>();
         
         
 	public PointScale(String name, int points) {

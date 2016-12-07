@@ -18,9 +18,9 @@ public class Event {
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-    private long userAppId;
-    private String type;
+    private Long id;
+    private Long userExtAppId;
+    private String eventType;
     
     @ManyToOne
     private User user;
@@ -32,30 +32,64 @@ public class Event {
         
     }
     
-    public Event(long userId, String type){
-        this.userAppId = userId;
-        this.type = type;
+    public Event(Long userExtAppId, User user, Application application, String EventType){
+        this.userExtAppId = userExtAppId;
+        this.user = user;
+        this.application = application;
+        this.eventType = EventType;
+        
     }
     
     public void setUserAppId(long userAppId) {
-        this.userAppId = userAppId;
+        this.userExtAppId = userAppId;
     }
 
     public void setType(String Type) {
-        this.type = Type;
+        this.eventType = Type;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public long getUserAppId() {
-        return userAppId;
+    public Long getUserAppId() {
+        return userExtAppId;
     }
 
     public String getType() {
-        return type;
+        return eventType;
     }
     
+        public Long getUserExtAppId() {
+        return userExtAppId;
+    }
+
+    public void setUserExtAppId(Long userExtAppId) {
+        this.userExtAppId = userExtAppId;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
     
 }

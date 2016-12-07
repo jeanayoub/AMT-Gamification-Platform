@@ -2,14 +2,18 @@ package ch.heigvd.gamification.api;
 
 
 import ch.heigvd.gamification.api.ApplicationsApi;
+import ch.heigvd.gamification.api.dto.ApplicationEventGet;
 import ch.heigvd.gamification.api.dto.ApplicationGet;
 import ch.heigvd.gamification.api.dto.ApplicationPost;
 import ch.heigvd.gamification.api.dto.BadgeGet;
+import ch.heigvd.gamification.api.dto.EventGet;
 import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
+import ch.heigvd.gamification.model.Event;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,10 +123,70 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
     
+    @Override
+    @RequestMapping(value = "/applications/{id}/badges/{idBadge}", method = RequestMethod.GET) 
+    public ResponseEntity<Object> applicationsIdBadgesIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
+        
+        if(badgesRepository.findOne(idBadge).getApplication().getId() == id){
+        
+            return ResponseEntity.ok().body(badgeToDTO(badgesRepository.findOne(idBadge)));
+        }
+        
+        return ResponseEntity.ok().body(null);
+    }
+    
+    @Override
+    @RequestMapping(value = "/applications/{id}/events", method = RequestMethod.GET) 
+    public ResponseEntity<Object> applicationsIdEventsGet(@PathVariable Long id) {
+        
+        if(applicationRepository.findOne(id) != null){
+            return ResponseEntity.ok().body(applicationEventGetToDTO(applicationRepository.findOne(id)));   
+        }
+        
+        return null;
+    }
+    
+    // Used to return all event for an application
+    public ApplicationEventGet applicationEventGetToDTO(Application application){
+        
+        List<Object> eventList = new ArrayList<>();
+        
+        for(Event event : application.getEventList()){
+            eventList.add(eventToDTO(event));
+        }
+        
+        ApplicationEventGet applicationEventGet = new ApplicationEventGet();
+        applicationEventGet.setEventList(eventList);
+        return applicationEventGet;    
+        
+    }
+    
+    public BadgeGet badgeToDTO(Badge badge){
+    
+       
+        BadgeGet badgeGet = new BadgeGet();
+        badgeGet.setId(badge.getId());
+        badgeGet.setName(badge.getName());
+        badgeGet.setDescription(badge.getDescription());
+        badgeGet.setIcon(badge.getIcon());
+        return badgeGet; 
+    }
+       
+    public EventGet eventToDTO(Event event){
+    
+            EventGet eventGet = new EventGet();
+            eventGet.setId(event.getId());
+            eventGet.setUserExtAppId(event.getUserAppId());
+            eventGet.setEventType(event.getEventType());
+            eventGet.setUserId(event.getUser().getId());
+            
+            return eventGet;
+            
+    }
+    
     public ApplicationGet toDTO(Application application){
         
-        
-         LinkedList<String> listBadgesUrl = new LinkedList<String>();
+        LinkedList<String> listBadgesUrl = new LinkedList<String>();
         
         ApplicationGet appGetTmp = new ApplicationGet();
         appGetTmp.setId(application.getId());
@@ -139,28 +203,9 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         return appGetTmp;  
     }
 
-    @Override
-    @RequestMapping(value = "/applications/{id}/{idBadge}", method = RequestMethod.GET) 
-    public ResponseEntity<Object> applicationsIdIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
-        
-        if(badgesRepository.findOne(idBadge).getApplication().getId() == id){
-        
-            return ResponseEntity.ok().body(badgeToDTO(badgesRepository.findOne(idBadge)));
-        }
-        
-        return ResponseEntity.ok().body(null);
-    }
     
-    // SALE
-    public BadgeGet badgeToDTO(Badge badge){
+        
+        
     
-       
-        BadgeGet badgeGet = new BadgeGet();
-        badgeGet.setId(badge.getId());
-        badgeGet.setName(badge.getName());
-        badgeGet.setDescription(badge.getDescription());
-        badgeGet.setIcon(badge.getIcon());
-        return badgeGet; 
-    }
     
 }

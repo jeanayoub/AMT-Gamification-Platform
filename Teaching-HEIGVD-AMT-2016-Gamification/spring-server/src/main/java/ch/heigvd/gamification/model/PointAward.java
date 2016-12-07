@@ -15,25 +15,47 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-@Entity
-public class PointAward {
-   
+
+public class PointAward extends Award{
     
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private       long   id;
+    private long actualValue;
+    private long criticalValue; 
+    
+    public PointAward(){
+        super();
+    }
+   
+      public long getActualValue() {
+        return actualValue;
+    }
+
+    public void setActualValue(long actualValue) {
+        this.actualValue = actualValue;
+    }
+
+    public long getCriticalValue() {
+        return criticalValue;
+    }
+
+    public void setCriticalValue(long criticalValue) {
+        this.criticalValue = criticalValue;
+    }
+    
+   // @Id
+    //@GeneratedValue(strategy=GenerationType.AUTO)
+    //private       long   id;
         
 
-    private long awardPoint;
+    //private long awardPoint;
     
-    @ManyToOne
+    /*@ManyToOne
     //@PrimaryKeyJoinColumn(name="userId", referencedColumnName="ID")
     private User user;
     
    
     @ManyToOne
    // @PrimaryKeyJoinColumn(name="pointScaleId", referencedColumnName="ID")
-    private PointScale pointScale;
+    private PointScale pointScale;*/
     
     
     

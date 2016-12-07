@@ -34,6 +34,9 @@ public class Badge {
     @OneToMany(mappedBy = "badge")
     private List<Rule> badgesRule = new ArrayList<>();
     
+    @OneToMany(mappedBy = "badge")
+    private List<Award> listAward = new ArrayList<>();
+    
     
     @ManyToOne
     private Application application;

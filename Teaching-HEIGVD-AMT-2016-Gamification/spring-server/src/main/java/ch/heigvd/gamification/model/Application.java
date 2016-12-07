@@ -21,9 +21,9 @@ import javax.persistence.OneToMany;
 @Entity
 public class Application {
 
-    @Id
+        @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+    private Long id;
     private String name;
     private String password;
     private String description;
@@ -84,7 +84,46 @@ public class Application {
     public List<Badge> getBadges() {
         return badgesList;
     }
-       
+    
+    public List<Rule> getRuleList() {
+        return ruleList;
+    }
+
+    public void setRuleList(List<Rule> ruleList) {
+        this.ruleList = ruleList;
+    }
+
+    public List<Badge> getBadgesList() {
+        return badgesList;
+    }
+
+    public void setBadgesList(List<Badge> badgesList) {
+        this.badgesList = badgesList;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
+
+    public List<Event> getEventList() {
+        return eventList;
+    }
+
+    public void setEventList(List<Event> eventList) {
+        this.eventList = eventList;
+    }
+    
+    public User findUserByAppId(Long id){
+        for(User user : userList){
+            if(user.getUserAppId()==id)
+                return user;
+        }
+        return null;
+    }
     
         
 }

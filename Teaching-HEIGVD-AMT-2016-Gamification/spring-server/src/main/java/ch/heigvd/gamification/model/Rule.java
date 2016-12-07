@@ -27,4 +27,17 @@ public class Rule {
     @ManyToOne
     private Badge badge;
     
+    private String typeEvent;
+    private boolean awardBadge;
+    private boolean awardPoint;
+    private long ruleValue;
+    
+    public Rule(){
+        
+    }
+    
+    public Rule(Application application, PointScale pointScale, Badge badge, String typeEvent, boolean awardBadge, boolean awardPoint, long ruleValue){
+        
+    }
+
 }
