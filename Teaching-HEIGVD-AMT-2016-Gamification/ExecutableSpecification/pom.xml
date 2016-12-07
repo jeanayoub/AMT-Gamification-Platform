@@ -30,12 +30,14 @@
             <configuration>
               <inputSpec>src/main/resources/api-spec.yaml</inputSpec>
               <language>java</language>
-              <!--
+              
               <library>jersey2</library>
-              -->
+              
               <library>okhttp-gson</library>
               <configOptions>
-                <sourceFolder>src/gen/java/main</sourceFolder>
+                  
+                <sourceFolder>src/gen/java/main</sourceFolder>                
+                
                 <basePackage>ch.heigvd.gamification</basePackage>
                 <modelPackage>ch.heigvd.gamification.api.dto</modelPackage>
                 <apiPackage>ch.heigvd.gamification.api</apiPackage>
