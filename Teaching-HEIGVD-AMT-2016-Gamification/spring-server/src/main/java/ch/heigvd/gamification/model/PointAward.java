@@ -5,32 +5,37 @@
  */
 package ch.heigvd.gamification.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 @Entity
-public class PointScaleState {
-    
-    
+public class PointAward {
+   
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long   id;
+    private       long   id;
+        
+
+    private long awardPoint;
     
-    private long points;
+    @ManyToOne
+    //@PrimaryKeyJoinColumn(name="userId", referencedColumnName="ID")
+    private User user;
     
-    
-    @OneToOne
+   
+    @ManyToOne
+   // @PrimaryKeyJoinColumn(name="pointScaleId", referencedColumnName="ID")
     private PointScale pointScale;
     
-    //@ManyToOne(mappedBy = "User")
-    //private List<User> listUser = new ArrayList();
+    
+    
     
 }

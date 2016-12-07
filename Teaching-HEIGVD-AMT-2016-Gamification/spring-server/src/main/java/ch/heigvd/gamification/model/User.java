@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -20,10 +21,18 @@ public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
-    private long userId;
+    private long userAppId;
+    
+    @ManyToOne
+    private Application application;
+    
+    @OneToMany(mappedBy = "user")
+     private List<Event> userList = new ArrayList<>();
+    
+    
    
     @OneToMany(mappedBy = "user")
-    private List<UserPointScaleAssociation> listPointScale = new ArrayList<>();
+    private List<PointAward> listPointScale = new ArrayList<>();
     
     public void User(){
     
@@ -33,11 +42,11 @@ public class User {
         return id;
     }
 
-    public long getUserId() {
-        return userId;
+    public long getUserAppId() {
+        return userAppId;
     }
     
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setUserAppId(long userAppId) {
+        this.userAppId = userAppId;
     }
 }

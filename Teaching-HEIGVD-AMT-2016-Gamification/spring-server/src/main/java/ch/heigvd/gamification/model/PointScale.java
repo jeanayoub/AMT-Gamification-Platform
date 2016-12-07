@@ -35,8 +35,12 @@ public class PointScale {
         
         
         @OneToMany(mappedBy = "pointScale")
-        private List<UserPointScaleAssociation> userList = new ArrayList();
+        private List<PointAward> userList = new ArrayList();
 	
+        @OneToMany(mappedBy = "pointScale")
+        private List<Rule> RuleList = new ArrayList();
+        
+        
 	public PointScale(String name, int points) {
 		this.name = name;
                 this.points = points;

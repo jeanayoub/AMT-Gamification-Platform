@@ -3,11 +3,14 @@
  */
 package ch.heigvd.gamification.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * This class represents a badge. Each badge has a unique Id, a name, a
@@ -28,6 +31,10 @@ public class Badge {
     private String description;
     private String icon;
 
+    @OneToMany(mappedBy = "badge")
+    private List<Rule> badgesRule = new ArrayList<>();
+    
+    
     @ManyToOne
     private Application application;
 

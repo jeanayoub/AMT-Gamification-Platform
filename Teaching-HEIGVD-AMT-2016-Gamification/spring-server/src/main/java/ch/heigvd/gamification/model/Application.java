@@ -26,13 +26,21 @@ public class Application {
     private long id;
     private String name;
     private String password;
-
-   
-    
     private String description;
    
+    
+    @OneToMany(mappedBy = "application")
+    private List<Rule> ruleList = new ArrayList<>();
+    
     @OneToMany(mappedBy = "application")
     private List<Badge> badgesList = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "application")
+    private List<User> userList = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "application")
+    private List<Event> eventList = new ArrayList<>();
+    
         
    
     public Application(){
