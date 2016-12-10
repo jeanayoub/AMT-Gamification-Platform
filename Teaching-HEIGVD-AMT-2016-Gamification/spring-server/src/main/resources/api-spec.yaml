@@ -260,7 +260,7 @@ paths:
   /pointScales:
     post:
       parameters:
-        - name: pointScale
+        - name: pointScaleDTO
           in: body
           description: The info required to create a pointScale
           schema:
@@ -279,7 +279,7 @@ paths:
         200:
           description:  List all pointscale
           schema:
-            title: pointscale
+            title: pointScaleDTO
             type: array
             items:
               $ref: '#/definitions/pointScaleGet'
@@ -297,7 +297,7 @@ paths:
         200:
           description: Sends the pointScale with pointScale id
           schema:
-            title: pointScale
+            title: pointScaleDTO
             type: object
             items:
               $ref: '#/definitions/pointScaleGet'
@@ -309,7 +309,7 @@ paths:
           format: int64
           description: id of the pointScale to modify
           required: true
-        - name: pointScale
+        - name: pointScaleDTO
           in: body
           description: The new values for an existing pointScale
           schema:
@@ -319,7 +319,7 @@ paths:
         200:
           description: Sends the modified pointScale id
           schema:
-            title: pointScale
+            title: pointScaleDTO
             type: object
             items:
               $ref: '#/definitions/pointScaleGet'
@@ -340,7 +340,7 @@ paths:
   /rules:
     post:
       parameters:
-        - name: rule
+        - name: ruleDTO
           in: body
           description: The info required to create a rule
           schema:
@@ -359,7 +359,7 @@ paths:
         200:
           description:  List all rules
           schema:
-            title: rule
+            title: ruleDTO
             type: array
             items:
               $ref: '#/definitions/ruleGet'
@@ -377,7 +377,7 @@ paths:
         200:
           description: Sends the rule with rule id
           schema:
-            title: rule
+            title: ruleDTO
             type: object
             items:
               $ref: '#/definitions/ruleGet'
@@ -389,7 +389,7 @@ paths:
           format: int64
           description: id of the rule to modify
           required: true
-        - name: rule
+        - name: ruleDTO
           in: body
           description: The new values for an existing rule
           schema:
@@ -399,7 +399,7 @@ paths:
         200:
           description: Sends the modified rule id
           schema:
-            title: rule
+            title: ruleDTO
             type: object
             items:
               $ref: '#/definitions/ruleGet'
@@ -419,7 +419,7 @@ paths:
 
 definitions:
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
-# pointScale
+# rule
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
 
   ruleGet:
@@ -432,26 +432,28 @@ definitions:
         type: string
       eventType:
         type: string
-      awardBadge:
-        type: boolean
-      awardPoint:
-        type: boolean
-      ruleValue:
+      awardBadgeId:
         type: integer
         format: int64
-      
-      
+      awardPointScaleId:
+        type: integer
+        format: int64
+      numberOfPoint:
+        type: integer
+        format: int64
   
   rulePost:
     type: object
     properties:
       eventType:
         type:  string
-      awardBadge:
-        type: boolean
-      awardPoint:
-        type: boolean
-      ruleValue:
+      awardBadgeId:
+        type: integer
+        format: int64
+      awardPointScaleId:
+        type: integer
+        format: int64
+      numberOfPoint:
         type: integer
         format: int64
 
@@ -463,6 +465,9 @@ definitions:
     properties:
       name:
         type: string
+      maxPoint:
+        type: integer
+        format: int64
 
   pointScaleGet:
     type: object

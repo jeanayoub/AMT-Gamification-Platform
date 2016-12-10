@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 
@@ -25,50 +26,63 @@ import javax.persistence.OneToMany;
 @Entity
 public class PointScale {
 
-        @Id
-        @GeneratedValue(strategy=GenerationType.AUTO)
-	private       long   id;
-	private       String name;
-        private       int points;
-        
-	
-        @OneToMany(mappedBy = "pointScale")
-        private List<Rule> RuleList = new ArrayList();
-        
-        @OneToMany(mappedBy = "pointScale")
-        private List<Award> listAward = new ArrayList<>();
-        
-        
-	public PointScale(String name, int points) {
-		this.name = name;
-                this.points = points;
-	}
-        
-        public PointScale(){
-            
-        }
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private       Long   id;
+    private       String name;
+    private       Long maxPoints;
 
-	public String getName() {
-            return name;
-	}
 
-	public void setName(String name) {
+    @OneToMany(mappedBy = "pointScale")
+    private List<Rule> RuleList = new ArrayList();
+
+    @OneToMany(mappedBy = "pointScale")
+    private List<Award> listAward = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "pointScale")
+    private List<Progression> listProgression = new ArrayList<>();
+    
+    @ManyToOne
+    private Application application;
+
+
+    public PointScale(Application application, String name, Long maxPoints) {
+            this.application = application;
             this.name = name;
-	}
+            this.maxPoints = maxPoints;
+    }
 
+    public PointScale(){
 
-	public long getID() {
-            return id;
-	}
-        
-        public int getPoints() {
-            return points;
-        }
+    }
 
-        public void setPoints(int points) {
-            this.points = points;
-        }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getMaxPoints() {
+        return maxPoints;
+    }
+
+    public void setMaxPoints(Long maxPoints) {
+        this.maxPoints = maxPoints;
+    }
 	
+    public Long getId() {
+        return id;
+    }
+
+    public List<Rule> getRuleList() {
+        return RuleList;
+    }
+
+    public List<Award> getListAward() {
+        return listAward;
+    }
 	
 	
 }

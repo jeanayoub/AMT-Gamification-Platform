@@ -27,15 +27,19 @@ public class User {
     private Application application;
     
     @OneToMany(mappedBy = "user")
-    private List<Event> userList = new ArrayList<>();
+    private List<Event> eventList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Award> listAward = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "user")
+    private List<Progression> listProgression = new ArrayList<>();
 
     public User(){
     
     }
-    
+
+  
     public User(Long userAppId, Application application){
         this.userAppId = userAppId;
         this.application = application;
@@ -53,4 +57,33 @@ public class User {
     public void setUserAppId(long userAppId) {
         this.userAppId = userAppId;
     }
+    
+        public Application getApplication() {
+        return application;
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
+    public List<Event> getUserList() {
+        return eventList;
+    }
+
+    public void setUserList(List<Event> userList) {
+        this.eventList = userList;
+    }
+
+    public List<Award> getListAward() {
+        return listAward;
+    }
+
+    public void setListAward(List<Award> listAward) {
+        this.listAward = listAward;
+    }
+    
+    public List<Progression> getListProgression() {
+        return listProgression;
+    }
 }
+

@@ -5,6 +5,7 @@
  */
 package ch.heigvd.gamification.model;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,49 +16,23 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-
+@Entity
 public class PointAward extends Award{
-    
-    private long actualValue;
-    private long criticalValue; 
-    
-    public PointAward(){
+
+     
+    private Long awardedPoint;
+    private Date date;
+
+    public PointAward(Date date){
         super();
+        this.date = date;
     }
-   
-      public long getActualValue() {
-        return actualValue;
-    }
-
-    public void setActualValue(long actualValue) {
-        this.actualValue = actualValue;
+    
+      public Long getAwardedPoint() {
+        return awardedPoint;
     }
 
-    public long getCriticalValue() {
-        return criticalValue;
+    public void setAwardedPoint(Long awardedPoint) {
+        this.awardedPoint = awardedPoint;
     }
-
-    public void setCriticalValue(long criticalValue) {
-        this.criticalValue = criticalValue;
-    }
-    
-   // @Id
-    //@GeneratedValue(strategy=GenerationType.AUTO)
-    //private       long   id;
-        
-
-    //private long awardPoint;
-    
-    /*@ManyToOne
-    //@PrimaryKeyJoinColumn(name="userId", referencedColumnName="ID")
-    private User user;
-    
-   
-    @ManyToOne
-   // @PrimaryKeyJoinColumn(name="pointScaleId", referencedColumnName="ID")
-    private PointScale pointScale;*/
-    
-    
-    
-    
 }

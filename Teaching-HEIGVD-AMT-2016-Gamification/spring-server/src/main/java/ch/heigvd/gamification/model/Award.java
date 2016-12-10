@@ -31,17 +31,12 @@ public class Award {
     private String description;
         
     public Award(){
-        //super();
+
     }
-    
-    
+
     public long getId() {
         return id;
     }
-
-   /* public void setId(long id) {
-        this.id = id;
-    }*/
 
     public User getUser() {
         return user;

@@ -21,7 +21,7 @@ import javax.persistence.OneToMany;
 @Entity
 public class Application {
 
-        @Id
+    @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private String name;
@@ -41,10 +41,17 @@ public class Application {
     @OneToMany(mappedBy = "application")
     private List<Event> eventList = new ArrayList<>();
     
+    @OneToMany(mappedBy = "application")
+    private List<PointScale> pointScaleList = new ArrayList<>();
         
    
     public Application(){
         
+    }
+
+
+    public void setPointScaleList(List<PointScale> pointScaleList) {
+        this.pointScaleList = pointScaleList;
     }
     
     public Application(String name, String password, String description){
@@ -69,7 +76,7 @@ public class Application {
         this.description = description;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -123,6 +130,10 @@ public class Application {
                 return user;
         }
         return null;
+    }
+    
+    public List<PointScale> getPointScaleList() {
+        return pointScaleList;
     }
     
         
