@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ch.heigvd.gamification.api;
+package ch.heigvd.gamification.services;
 
 import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.AwardRepository;
@@ -21,9 +21,10 @@ import ch.heigvd.gamification.model.Rule;
 import ch.heigvd.gamification.model.User;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Service
 public class RulesApplication {
 
     RuleRepository ruleRepository;
@@ -78,17 +79,18 @@ public class RulesApplication {
                         
                         if (progression.getPointScale().getId().equals(rule.getPointScale().getId())) {
 
+                            // If we didn't already hit the max point limit of the pointScale we add point to the progression.
                             if(progression.getActualPoint() < rule.getPointScale().getMaxPoints()){
                                 progression.addPoint(rule.getNumberOfPoints());
                                 progressionRepository.save(progression);
                             
-                            
+                                //If we hit the max point just now, we can add the badge (if there is one).
                                 if(progression.getActualPoint() >= rule.getPointScale().getMaxPoints()){
                                     badgeReward = true;
                                 }
-                                else
+                                else // 
                                     badgeReward = false;
-                            }else
+                            }else // We dont have to add the badge again.
                                 badgeReward = false;
                         }
                     }

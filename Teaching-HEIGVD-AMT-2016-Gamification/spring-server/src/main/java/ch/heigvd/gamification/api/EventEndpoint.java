@@ -5,6 +5,7 @@
  */
 package ch.heigvd.gamification.api;
 
+import ch.heigvd.gamification.services.RulesApplication;
 import ch.heigvd.gamification.api.dto.EventPost;
 import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.AwardRepository;
@@ -55,7 +56,7 @@ public class EventEndpoint implements EventsApi {
         
         
         Application appTmp = applicationRepository.findByName(token);
-        
+        // du caca à changer
         if(appTmp != null){
             User userTmp = appTmp.findUserByAppId(event.getUserAppId());
             if(userTmp == null){
