@@ -24,6 +24,8 @@
   },
   "devDependencies": {
     "chai": "node_modules/chai",
+    "chai-things": "^0.2.0",
+    "chance": "^1.04",
     "debug": "^2.2.0",
     "grunt": "^1.0.1",
     "grunt-contrib-sass": "^1.0.0",

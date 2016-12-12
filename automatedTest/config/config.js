@@ -8,8 +8,8 @@ var config = {
     app: {
       name: 'automatedtest'
     },
-    port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/automatedtest-development'
+    port: process.env.PORT || 6060,
+    db: 'mongodb://192.168.99.100'
   },
 
   test: {
@@ -17,8 +17,8 @@ var config = {
     app: {
       name: 'automatedtest'
     },
-    port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/automatedtest-test'
+    port: process.env.PORT || 6060,
+    db: 'mongodb://192.168.99.100'
   },
 
   production: {
@@ -26,9 +26,25 @@ var config = {
     app: {
       name: 'automatedtest'
     },
-    port: process.env.PORT || 3000,
-    db: 'mongodb://localhost/automatedtest-production'
+    port: process.env.PORT || 6060,
+    db: 'mongodb://192.168.99.100'
   }
 };
 
 module.exports = config[env];
+
+
+
+
+/*
+var config = {
+  development: {
+    root: rootPath,
+    app: {
+      name: 'automatedtest'
+    },
+    port: process.env.PORT || 3000,
+    db: 'mongodb://localhost/automatedtest-development'
+  },
+
+  */

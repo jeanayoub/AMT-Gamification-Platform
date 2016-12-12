@@ -6,6 +6,11 @@ chai.use(require('chai-things'));
 
 describe("The /badges endpoint", function () {
 
-    it("should allow an authenticated user to get a badges");
-    it("should refuse to return a list of users to a user who is not authenticated");
+    it("should allow an authenticated user to get a badges",itShouldAllowAnAuthenticatedUserToGetABadges);
+    //it("should refuse to return a list of users to a user who is not authenticated");
+
+
+    function itShouldAllowAnAuthenticatedUserToGetABadges() {
+        return 0;
+    }
 });
