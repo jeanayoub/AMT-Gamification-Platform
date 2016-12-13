@@ -30,7 +30,6 @@ public class PointScale {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private       Long   id;
     private       String name;
-    private       Long maxPoints;
 
 
     @OneToMany(mappedBy = "pointScale")
@@ -46,10 +45,9 @@ public class PointScale {
     private Application application;
 
 
-    public PointScale(Application application, String name, Long maxPoints) {
+    public PointScale(Application application, String name) {
             this.application = application;
             this.name = name;
-            this.maxPoints = maxPoints;
     }
 
     public PointScale(){
@@ -64,14 +62,6 @@ public class PointScale {
         this.name = name;
     }
 
-    public Long getMaxPoints() {
-        return maxPoints;
-    }
-
-    public void setMaxPoints(Long maxPoints) {
-        this.maxPoints = maxPoints;
-    }
-	
     public Long getId() {
         return id;
     }
@@ -83,6 +73,4 @@ public class PointScale {
     public List<Award> getListAward() {
         return listAward;
     }
-	
-	
 }

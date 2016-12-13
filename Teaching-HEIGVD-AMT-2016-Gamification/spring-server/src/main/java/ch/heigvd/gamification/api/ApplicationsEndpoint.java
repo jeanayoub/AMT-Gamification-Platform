@@ -23,20 +23,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author marco
- */
 @RestController
 public class ApplicationsEndpoint implements ApplicationsApi {
 
@@ -50,33 +40,6 @@ public class ApplicationsEndpoint implements ApplicationsApi {
             this.badgesRepository = badgesRepository;
     }
     
-    
-    
-    @Override
-    @RequestMapping(value = "/applications", method = RequestMethod.GET)
-    public ResponseEntity<List<ApplicationGet>> applicationsGet() {
-     
-        LinkedList<Application> listTmp = applicationRepository.findAll();
-        LinkedList<ApplicationGet> listTmpDtoGet = new LinkedList<ApplicationGet>();
-        
-        for(Application application : listTmp){
-            listTmpDtoGet.add(toDTO(application));
-        }
-        
-        return ResponseEntity.ok().body(listTmpDtoGet);
-    }
-
-    @Override
-    @RequestMapping(value = "/applications/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> applicationsIdDelete(@PathVariable Long id) {
-        
-        if(applicationRepository.exists(id)){
-            applicationRepository.delete(id);
-            return ResponseEntity.ok().body(null);
-        }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-    }
-
     @Override
     @RequestMapping(value = "/applications", method = RequestMethod.POST)
     public ResponseEntity<Void> applicationsPost(@RequestBody ApplicationPost application) {
@@ -93,8 +56,21 @@ public class ApplicationsEndpoint implements ApplicationsApi {
 
         return ResponseEntity.created(location).build();
     }
-
-
+    
+    @Override
+    @RequestMapping(value = "/applications", method = RequestMethod.GET)
+    public ResponseEntity<List<ApplicationGet>> applicationsGet() {
+     
+        LinkedList<Application> listTmp = applicationRepository.findAll();
+        LinkedList<ApplicationGet> listTmpDtoGet = new LinkedList<ApplicationGet>();
+        
+        for(Application application : listTmp){
+            listTmpDtoGet.add(toDTO(application));
+        }
+        
+        return ResponseEntity.ok().body(listTmpDtoGet);
+    }
+    
     @Override
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Object> applicationsIdGet(@PathVariable Long id) {
@@ -105,7 +81,18 @@ public class ApplicationsEndpoint implements ApplicationsApi {
          
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
-
+    
+    @Override
+    @RequestMapping(value = "/applications/{id}/events", method = RequestMethod.GET) 
+    public ResponseEntity<Object> applicationsIdEventsGet(@PathVariable Long id) {
+        
+        if(applicationRepository.findOne(id) != null){
+            return ResponseEntity.ok().body(applicationEventGetToDTO(applicationRepository.findOne(id)));   
+        }
+        
+        return null;
+    }
+    
     @Override
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.PUT) 
     public ResponseEntity<Object> applicationsIdPut(@PathVariable Long id, ApplicationPost application) {
@@ -124,6 +111,17 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     }
     
     @Override
+    @RequestMapping(value = "/applications/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> applicationsIdDelete(@PathVariable Long id) {
+        
+        if(applicationRepository.exists(id)){
+            applicationRepository.delete(id);
+            return ResponseEntity.ok().body(null);
+        }
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+    
+    @Override
     @RequestMapping(value = "/applications/{id}/badges/{idBadge}", method = RequestMethod.GET) 
     public ResponseEntity<Object> applicationsIdBadgesIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
         
@@ -134,18 +132,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         
         return ResponseEntity.ok().body(null);
     }
-    
-    @Override
-    @RequestMapping(value = "/applications/{id}/events", method = RequestMethod.GET) 
-    public ResponseEntity<Object> applicationsIdEventsGet(@PathVariable Long id) {
-        
-        if(applicationRepository.findOne(id) != null){
-            return ResponseEntity.ok().body(applicationEventGetToDTO(applicationRepository.findOne(id)));   
-        }
-        
-        return null;
-    }
-    
+
     // Used to return all event for an application
     public ApplicationEventGet applicationEventGetToDTO(Application application){
         
@@ -201,11 +188,5 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         appGetTmp.setBadgesList(listBadgesUrl);
         
         return appGetTmp;  
-    }
-
-    
-        
-        
-    
-    
+    } 
 }

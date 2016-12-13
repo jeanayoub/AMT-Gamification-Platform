@@ -5,15 +5,18 @@
  */
 package ch.heigvd.gamification.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Rule {
-    
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
@@ -27,23 +30,35 @@ public class Rule {
     @ManyToOne
     private Badge badge;
     
+    @OneToMany(mappedBy = "rule")
+    private List<RuleCondition> listCondition;
+    
     private String typeEvent;
-    private Long numberOfPoints;
+    private Long point;
     
     public Rule(){
         
     }
     
-    public Rule(Application application, PointScale pointScale, Badge badge, String typeEvent, Long numberOfPoints){
+    public Rule(Application application, PointScale pointScale, Badge badge, String typeEvent, Long point){
    
         this.application = application;
         this.pointScale = pointScale;
         this.badge = badge;
         this.typeEvent = typeEvent;
-        this.numberOfPoints = numberOfPoints;
+        this.point = point;
+        this.listCondition = listCondition;
        
     }
 
+    public void setListCondition(List<RuleCondition> listCondition) {
+        this.listCondition = listCondition;
+    }
+    
+    public List<RuleCondition> getListCondition() {
+        return listCondition;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -80,11 +95,11 @@ public class Rule {
         this.typeEvent = typeEvent;
     }
 
-    public Long getNumberOfPoints() {
-        return numberOfPoints;
+    public Long getPoint() {
+        return point;
     }
 
-    public void setNumberOfPoints(Long numberOfPoints) {
-        this.numberOfPoints = numberOfPoints;
+    public void setPoint(Long numberOfPoints) {
+        this.point = numberOfPoints;
     }
 }

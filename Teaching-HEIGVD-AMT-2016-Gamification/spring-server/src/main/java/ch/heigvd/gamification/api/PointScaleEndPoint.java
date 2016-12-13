@@ -69,7 +69,7 @@ public class PointScaleEndPoint implements PointScalesApi{
         
         Application appTmp = applicationRepository.findByName(token);
         
-        PointScale pointScaleToCreate = new PointScale(appTmp, pointScaleDTO.getName(), pointScaleDTO.getMaxPoint());
+        PointScale pointScaleToCreate = new PointScale(appTmp, pointScaleDTO.getName());
         pointScaleRepository.save(pointScaleToCreate);
         
         URI location = ServletUriComponentsBuilder

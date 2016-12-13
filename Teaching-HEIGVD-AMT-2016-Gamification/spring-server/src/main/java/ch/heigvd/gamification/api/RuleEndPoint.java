@@ -13,10 +13,12 @@ import ch.heigvd.gamification.dao.PointScaleRepository;
 import ch.heigvd.gamification.dao.RuleRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
+import ch.heigvd.gamification.model.RuleCondition;
 import ch.heigvd.gamification.model.PointScale;
 import ch.heigvd.gamification.model.Rule;
 import ch.heigvd.gamification.model.User;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ch.heigvd.gamification.dao.RuleConditionRepository;
 
 @RestController
 public class RuleEndPoint implements RulesApi {
@@ -34,9 +37,11 @@ public class RuleEndPoint implements RulesApi {
     ApplicationRepository applicationRepository;
     BadgesRepository badgesRepository;
     PointScaleRepository pointScaleRepository;
+    RuleConditionRepository conditionRepository;
     
     @Autowired
-    RuleEndPoint(RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository) {
+    RuleEndPoint(RuleConditionRepository conditionRepository, RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository) {
+            this.conditionRepository = conditionRepository;
             this.ruleRepository = ruleRepository;
             this.applicationRepository = applicationRepository;
             this.badgesRepository = badgesRepository;
@@ -71,6 +76,7 @@ public class RuleEndPoint implements RulesApi {
         Application appTmp = applicationRepository.findByName(token);
         Badge badgeTmp = null;
         PointScale pointScaleTmp = null;
+        List<RuleCondition> listCondition = new ArrayList<>();
               
         // If we found an application corresponging to the name received.
         if(appTmp != null){
@@ -86,9 +92,18 @@ public class RuleEndPoint implements RulesApi {
             if(badgeTmp != null || pointScaleTmp != null){
                 
                 // Create thhe new rule and add it to the DB.
-                Rule rule = new Rule(appTmp, pointScaleTmp, badgeTmp, ruleDTO.getEventType(), ruleDTO.getNumberOfPoint());
-                
+                Rule rule = new Rule(appTmp, pointScaleTmp, badgeTmp, ruleDTO.getEventType(), ruleDTO.getPoint());
                 ruleRepository.save(rule);
+                
+                for(String str : ruleDTO.getConditions()){
+                    RuleCondition ruleConditionTmp = new RuleCondition(rule, str); 
+                    conditionRepository.save(ruleConditionTmp);
+                    //listCondition.add(cacaTmp);
+                }
+                
+                //rule.setListCondition(listCondition);
+                
+                
 
                 URI location = ServletUriComponentsBuilder
                             .fromCurrentRequest().path("/{id}")

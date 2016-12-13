@@ -18,14 +18,16 @@ import ch.heigvd.gamification.model.BadgeAward;
 import ch.heigvd.gamification.model.PointAward;
 import ch.heigvd.gamification.model.Progression;
 import ch.heigvd.gamification.model.Rule;
+import ch.heigvd.gamification.model.RuleCondition;
 import ch.heigvd.gamification.model.User;
 import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 @Service
-public class RulesApplication {
+public class EventsProcessor {
 
     RuleRepository ruleRepository;
     UserRepository userRepository;
@@ -35,16 +37,17 @@ public class RulesApplication {
     AwardRepository awardRepository;
     ProgressionRepository progressionRepository;
 
-    /* @Autowired
-    RulesApplication(RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository, UserRepository userRepository) {
+   /* @Autowired
+    EventsProcessor(RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository, UserRepository userRepository, ProgressionRepository progressionRepository) {
             this.ruleRepository = ruleRepository;
             this.userRepository = userRepository;
             this.applicationRepository = applicationRepository;
             this.badgesRepository = badgesRepository;
             this.pointScaleRepository = pointScaleRepository;
+            this.progressionRepository = progressionRepository;
             
     }*/
-    public RulesApplication(UserRepository userRepository, ApplicationRepository applicationRepository, AwardRepository awardRepository, PointScaleRepository pointScaleRepository, ProgressionRepository progressionRepository) {
+    public EventsProcessor(UserRepository userRepository, ApplicationRepository applicationRepository, AwardRepository awardRepository, PointScaleRepository pointScaleRepository, ProgressionRepository progressionRepository) {
         this.userRepository = userRepository;
         this.applicationRepository = applicationRepository;
         this.awardRepository = awardRepository;
@@ -71,11 +74,18 @@ public class RulesApplication {
                     PointAward pointAward = new PointAward(new Date());
                     pointAward.setPointScale(rule.getPointScale());
                     pointAward.setUser(userTmp);
-                    pointAward.setAwardedPoint(rule.getNumberOfPoints());
+                    pointAward.setAwardedPoint(rule.getPoint());
 
                     awardRepository.save(pointAward);
                     
                     for (Progression progression : userTmp.getListProgression()) {
+                        if (progression.getPointScale().getId().equals(rule.getPointScale().getId())) {
+                            progression.addPoint(rule.getPoint());
+                            progressionRepository.save(progression);
+                        }
+                    }
+                    
+                    /*for (Progression progression : userTmp.getListProgression()) {
                         
                         if (progression.getPointScale().getId().equals(rule.getPointScale().getId())) {
 
@@ -93,7 +103,7 @@ public class RulesApplication {
                             }else // We dont have to add the badge again.
                                 badgeReward = false;
                         }
-                    }
+                    }*/
                 }
                 
                 // If a badge dont depend of a pointScale, it will be allowed.
@@ -108,6 +118,21 @@ public class RulesApplication {
                     awardRepository.save(badgeAward);
                 }
             }
+            
+            List<RuleCondition> ruleConditionList = rule.getListCondition();
+            
+           
+            
+           // String ruleEventType = ruleConditionList.get(0).getRuleCondition();
+            //Long pointScaleId = new Long(ruleConditionList.get(1).getRuleCondition());
+            //Long seuil = rule.getPoint();
+            
+            
+           /* if((ruleConditionList.get(0).equals(eventType)) && ){
+                
+            }*/
+            
+            
         }
     }
 }
