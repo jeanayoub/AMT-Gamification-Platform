@@ -40,14 +40,23 @@ public class PointScale {
     
     @OneToMany(mappedBy = "pointScale")
     private List<Progression> listProgression = new ArrayList<>();
-    
+
+    public Application getApplication() {
+        return application;
+    }
+
     @ManyToOne
     private Application application;
 
 
+    public void setApplication(Application application) {
+        this.application = application;
+    }
+
     public PointScale(Application application, String name) {
             this.application = application;
             this.name = name;
+
     }
 
     public PointScale(){
