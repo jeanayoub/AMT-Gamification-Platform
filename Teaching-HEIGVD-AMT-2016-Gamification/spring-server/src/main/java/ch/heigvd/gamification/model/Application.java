@@ -23,7 +23,7 @@ public class Application {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    private String id;
     private String name;
     private String password;
     private String description;
@@ -76,7 +76,7 @@ public class Application {
         this.description = description;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

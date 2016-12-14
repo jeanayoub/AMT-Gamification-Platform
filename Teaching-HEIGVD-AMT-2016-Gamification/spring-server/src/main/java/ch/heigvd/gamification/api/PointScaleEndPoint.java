@@ -14,14 +14,12 @@ import ch.heigvd.gamification.dao.RuleRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.PointScale;
 import java.net.URI;
+import java.util.LinkedList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
@@ -40,27 +38,65 @@ public class PointScaleEndPoint implements PointScalesApi{
             this.pointScaleRepository = pointScaleRepository;
             
     }
-    
-    
-    
+
+
+
+
     @Override
+    @RequestMapping(value = "/pointScales", method = RequestMethod.GET)
     public ResponseEntity<List<PointScaleGet>> pointScalesGet() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        LinkedList<PointScale> listTmp = pointScaleRepository.findAll();
+        LinkedList<PointScaleGet> listTmpDtoGet = new LinkedList<PointScaleGet>();
+
+        for(PointScale ps : listTmp){
+            PointScaleGet tmpPS = new PointScaleGet();
+            tmpPS.setId(ps.getId());
+            tmpPS.setName(ps.getName());
+            tmpPS.setApllicationName(ps.getApplication().getName());
+            tmpPS.setApplicationId(ps.getApplication().getId());
+            listTmpDtoGet.add(tmpPS);
+        }
+
+        return ResponseEntity.ok().body(listTmpDtoGet);
     }
 
     @Override
+    @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Object> pointScalesIdGet(@PathVariable Long id) {
+        if(pointScaleRepository.exists(id)){
+            return ResponseEntity.ok().body(pointScaleRepository.findOne(id));
+        }
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+    }
+
+    @Override
+    @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> pointScalesIdDelete(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(pointScaleRepository.exists(id)){
+            pointScaleRepository.delete(id);
+            return ResponseEntity.ok().body(null);
+        }
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
-    @Override
-    public ResponseEntity<Object> pointScalesIdGet(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
+    @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> pointScalesIdPut(Long id, PointScalePost pointScaleDTO) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(pointScaleRepository.exists(id)){
+            //TODO finir le put
+            //pointScaleRepository.findOne(id).setName(pointScaleDTO.getName());
+            //pointScaleRepository.findOne(id).setApplication(pointScaleDTO.get);
+
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(id).toUri();
+
+            return ResponseEntity.ok(location);
+        }
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
     @Override
