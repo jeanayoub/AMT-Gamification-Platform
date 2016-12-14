@@ -21,7 +21,7 @@ paths:
             title: Registration summary
             type: array
             items:
-              $ref: '#/definitions/RegistrationSummary'
+              $ref: '#/definitions/ApplicationGet'
     post:
       consumes:
         - application/json
@@ -30,7 +30,7 @@ paths:
           in: body
           description: The info required to register an application
           schema:
-            $ref: '#/definitions/Applications'
+            $ref: '#/definitions/ApplicationPost'
           required: true
       responses:
         201:
@@ -104,10 +104,39 @@ definitions:
   Applications:
     type: object
     properties:
-      applicationName:
+      name:
         type: string
       password:
         type: string
+ 
+  ApplicationPost:
+    type: object
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      description:
+        type: string
+        
+        
+  ApplicationGet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      description:
+        type: string
+      badgesList:
+        type: array
+        items:
+          type: string      
+        
+        
+        
   Credentials:
     type: object
     properties:
@@ -146,4 +175,3 @@ parameters:
     in: header
     required: true
     type: string
-

@@ -3,7 +3,7 @@ package ch.heigvd.amt.gamification.spec.steps;
 import ch.heigvd.gamification.ApiException;
 import ch.heigvd.gamification.api.DefaultApi;
 import ch.heigvd.gamification.api.dto.Credentials;
-import ch.heigvd.gamification.api.dto.Applications;
+import ch.heigvd.gamification.api.dto.ApplicationPost;
 import ch.heigvd.gamification.api.dto.User;
 import ch.heigvd.gamification.api.dto.Event;
 import ch.heigvd.gamification.api.dto.Token;
@@ -45,7 +45,7 @@ public class EventProcessingSteps {
   /*
   * Keep track of the applications created during the scenarios execution
    */
-  private final Map<String, Applications> applications = new HashMap<>();
+  private final Map<String, ApplicationPost> applications = new HashMap<>();
 
   /*
   * Keep track of the users created for each of the applications
@@ -60,8 +60,8 @@ public class EventProcessingSteps {
   @Given("^a token for a new gamified application (.*)$")
   public void a_token_for_a_new_gamified_application(String applicationReference) throws Throwable {
     String randomApplicationName = "app-name-" + (applicationsCounter++) + '-' + System.currentTimeMillis();
-    Applications applicationRegistration = new Applications();
-    applicationRegistration.setApplicationName(randomApplicationName);
+    ApplicationPost applicationRegistration = new ApplicationPost();
+    applicationRegistration.setName(randomApplicationName);
     applicationRegistration.setPassword(DUMMY_PASSWORD);
     api.applicationsPost(applicationRegistration); // register the application
 
@@ -117,5 +117,5 @@ public class EventProcessingSteps {
     User retrievedUserState = (User) lastApiResponse.getData();
     assertEquals(expectedNumberOfEvents, retrievedUserState.getNumberOfEvents().intValue());
   }
-
+  
 }

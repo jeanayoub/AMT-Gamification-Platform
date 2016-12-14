@@ -13,6 +13,6 @@ Then I see my app in the list
 
 Scenario: Check that it is not possible to create two apps with the same name
 Given I have an application payload
-When I POST it to the /registrations endpoint
-And I POST it to the /registrations endpoint
+When I POST it to the /applications endpoint
+And I POST it to the /applications endpoint
 Then I receive a 422 status code
