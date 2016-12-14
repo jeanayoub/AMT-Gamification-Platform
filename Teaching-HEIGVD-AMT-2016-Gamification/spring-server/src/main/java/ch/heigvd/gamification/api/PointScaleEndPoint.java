@@ -78,7 +78,6 @@ public class PointScaleEndPoint implements PointScalesApi{
 
         return ResponseEntity.created(location).build();
         
-        
     }
     
 }

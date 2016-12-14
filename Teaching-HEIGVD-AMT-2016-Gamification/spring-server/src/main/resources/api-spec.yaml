@@ -465,7 +465,23 @@ definitions:
         items:
           type: integer
           format: int64
-        
+  
+  ruleTest:
+    type: object
+    properties:
+      conditions:
+        type: object
+        properties:
+          onEventType:
+            type: string
+          onPropertyValues:
+            type: string
+          pointScale:
+            type: string
+          value:
+            type: string
+          
+      
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # pointScale
@@ -482,6 +498,14 @@ definitions:
       id:
         type: integer
         format: int64
+      name:
+        type: string
+      applicationId:
+        type: string
+      apllicationName:
+        type: string
+      
+      
     
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # event
@@ -513,7 +537,25 @@ definitions:
         type: array
         items:
           type: string
-      
+          
+  EventTest:
+    type: object
+    properties:
+      eventType:
+        type: string
+      properties:
+        type: object
+        properties:
+          pointScale:
+            type: string
+          oldValue :
+            type: string
+          newValue :
+            type: string
+      userAppId:
+        type: integer
+        format: int64
+
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Login
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
