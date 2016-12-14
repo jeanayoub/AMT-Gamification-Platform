@@ -55,6 +55,8 @@ public class PointScaleEndPoint implements PointScalesApi{
             tmpPS.setName(ps.getName());
             tmpPS.setApllicationName(ps.getApplication().getName());
             tmpPS.setApplicationId(ps.getApplication().getId());
+            
+            
             listTmpDtoGet.add(tmpPS);
         }
 
@@ -84,7 +86,7 @@ public class PointScaleEndPoint implements PointScalesApi{
 
     @Override
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> pointScalesIdPut(Long id, PointScalePost pointScaleDTO) {
+    public ResponseEntity<Object> pointScalesIdPut(@PathVariable Long id, @RequestBody PointScalePost pointScaleDTO, @RequestHeader String token) {
         if(pointScaleRepository.exists(id)){
             //TODO finir le put
             //pointScaleRepository.findOne(id).setName(pointScaleDTO.getName());
@@ -115,5 +117,4 @@ public class PointScaleEndPoint implements PointScalesApi{
         return ResponseEntity.created(location).build();
         
     }
-    
 }

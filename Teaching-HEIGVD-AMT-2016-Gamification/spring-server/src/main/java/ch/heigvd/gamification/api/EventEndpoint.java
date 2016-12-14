@@ -90,8 +90,7 @@ public class EventEndpoint implements EventsApi {
             
             EventsProcessor rulesApplication = new EventsProcessor(userRepository, applicationRepository, awardRepository, pointScaleRepository, progressionRepository);
             eventsProcessor.application(userTmp.getId(), eventDTO.getEventType(), appTmp.getId());
-            
-
+           
             URI location = ServletUriComponentsBuilder
                             .fromCurrentRequest().path("/{id}")
                             .buildAndExpand(eventTmp.getId()).toUri();

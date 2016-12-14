@@ -309,6 +309,10 @@ paths:
           format: int64
           description: id of the pointScale to modify
           required: true
+        - name: token
+          in: header
+          type: string
+          description: token
         - name: pointScaleDTO
           in: body
           description: The new values for an existing pointScale
@@ -507,7 +511,8 @@ definitions:
       name:
         type: string
       applicationId:
-        type: string
+        type: integer
+        format: int64
       apllicationName:
         type: string
       
