@@ -7,6 +7,7 @@ package ch.heigvd.gamification.api;
 
 import ch.heigvd.gamification.api.dto.RuleGet;
 import ch.heigvd.gamification.api.dto.RulePost;
+import ch.heigvd.gamification.api.dto.EventTest;
 import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.dao.PointScaleRepository;
@@ -117,7 +118,13 @@ public class RuleEndPoint implements RulesApi {
                 
             }*/       
         }
-                
+        
+        EventTest test = new EventTest();
+        //test.keySet()
+        //test.g
+        //test.
+        //test.getProperties().getNewValue();
+        
         return ResponseEntity.created(null).build();
     }
 

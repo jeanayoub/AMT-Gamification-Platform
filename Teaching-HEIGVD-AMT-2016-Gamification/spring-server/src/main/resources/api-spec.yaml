@@ -474,14 +474,20 @@ definitions:
         properties:
           onEventType:
             type: string
-          onPropertyValues:
+          additionalProperties:
             type: string
-          pointScale:
-            type: string
-          value:
-            type: string
-          
-      
+      actions:
+        type: object
+        properties:
+          awardBadgeId:
+            type: integer
+            format: int64
+          awardPoints:
+            type: integer
+            format: int64
+          awardPointScaleId:
+            type: integer
+            format: int64
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # pointScale
@@ -543,19 +549,12 @@ definitions:
     properties:
       eventType:
         type: string
-      properties:
-        type: object
-        properties:
-          pointScale:
-            type: string
-          oldValue :
-            type: string
-          newValue :
-            type: string
       userAppId:
         type: integer
-        format: int64
-
+        format: int64  
+    additionalProperties:
+      type: string
+      
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Login
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
