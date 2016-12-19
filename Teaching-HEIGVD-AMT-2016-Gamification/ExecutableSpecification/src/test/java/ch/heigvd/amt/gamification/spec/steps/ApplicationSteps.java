@@ -26,7 +26,6 @@ public class ApplicationSteps {
   private int applicationsCounter = 1;
 
   private int statusCode;
-  //private Applications application;
   private ApplicationPost applicationPost;
   private List<ApplicationGet> applications;
 
@@ -35,7 +34,7 @@ public class ApplicationSteps {
     applicationPost = new ApplicationPost();
     String randomApplicationName = "random-app-" + (applicationsCounter++) + "-" + System.currentTimeMillis();
     applicationPost.setName(randomApplicationName);
-    applicationPost.setPassword("123456789");
+    applicationPost.setPassword("password");
   }
   
   @When("^I POST it to the /applications endpoint$")

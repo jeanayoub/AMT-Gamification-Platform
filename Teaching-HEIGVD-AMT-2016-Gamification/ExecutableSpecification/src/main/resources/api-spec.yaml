@@ -101,13 +101,6 @@ definitions:
     properties:
       applicationName:
         type: string
-  Applications:
-    type: object
-    properties:
-      name:
-        type: string
-      password:
-        type: string
  
   ApplicationPost:
     type: object
