@@ -47,7 +47,7 @@ public class Rule {
         this.badge = badge;
         this.typeEvent = typeEvent;
         this.point = point;
-        this.listCondition = listCondition;
+       // this.listCondition = listCondition;
        
     }
 

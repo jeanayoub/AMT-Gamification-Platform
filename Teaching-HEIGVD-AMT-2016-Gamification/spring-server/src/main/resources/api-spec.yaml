@@ -83,6 +83,8 @@ paths:
             type: object
             items:
               $ref: '#/definitions/BadgeGet'
+        404:
+          description: Badge not found
     put:
       parameters:
         - name: id
@@ -105,6 +107,8 @@ paths:
             type: object
             items:
               $ref: '#/definitions/BadgeGet'
+        404:
+          description: Badge not found
     delete:
       parameters:
         - name: id
@@ -116,6 +120,8 @@ paths:
       responses:
         200:
           description: Delete the badge with badge id
+        404:
+          description: Badge not found
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # application
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-          
@@ -158,6 +164,9 @@ paths:
             type: object
             items:
               $ref: '#/definitions/ApplicationGet'
+        404:
+          description: Application not found
+          
     put:
       parameters:
         - name: id
@@ -180,6 +189,9 @@ paths:
             type: object
             items:
               $ref: '#/definitions/ApplicationGet'
+        404:
+          description: Application not found
+          
     delete:
       parameters:
         - name: id
@@ -191,6 +203,8 @@ paths:
       responses:
         200:
           description: Delete the application with badge id
+        404:
+          description: Application not found
   
   /applications/{id}/badges/{idBadge}:
     get:
@@ -215,6 +229,8 @@ paths:
             type: object
             items:
               $ref: '#/definitions/BadgeGet'
+        404:
+          description: Application or badge not found
               
   /applications/{id}/events:
     get:
@@ -233,6 +249,9 @@ paths:
             type: object
             items:
               $ref: '#/definitions/ApplicationEventGet'
+        404:
+          description: Application or event not found
+          
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # login
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
@@ -277,7 +296,7 @@ paths:
     get:
       responses:
         200:
-          description:  List all pointscale
+          description:  PointScale list
           schema:
             title: pointScaleDTO
             type: array
@@ -295,12 +314,15 @@ paths:
           required: true
       responses:
         200:
-          description: Sends the pointScale with pointScale id
+          description: Info of the poinstScale
           schema:
             title: pointScaleDTO
             type: object
             items:
               $ref: '#/definitions/pointScaleGet'
+        404:
+          description: PointScale not found
+          
     put:
       parameters:
         - name: id
@@ -321,12 +343,15 @@ paths:
           required: true
       responses:
         200:
-          description: Sends the modified pointScale id
+          description: PointScale modified successfully
           schema:
             title: pointScaleDTO
             type: object
             items:
               $ref: '#/definitions/pointScaleGet'
+        404:
+          description: PointScale not found
+          
     delete:
       parameters:
         - name: id
@@ -337,7 +362,10 @@ paths:
           required: true
       responses:
         200:
-          description: Delete the pointScale with badge id
+          description: PointScale deleted successfully
+        404:
+          description: PointScale not found
+          
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # rule
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-            
@@ -356,7 +384,7 @@ paths:
           description: token
       responses:
         201:
-          description: Make a new rule
+          description: Rule created successfully
   
     get:
       responses:
@@ -379,12 +407,15 @@ paths:
           required: true
       responses:
         200:
-          description: Sends the rule with rule id
+          description: Rule infos
           schema:
             title: ruleDTO
             type: object
             items:
               $ref: '#/definitions/ruleGet'
+        404:
+          description: Rule not found
+          
     put:
       parameters:
         - name: id
@@ -401,12 +432,15 @@ paths:
           required: true
       responses:
         200:
-          description: Sends the modified rule id
+          description: Rule modified successfully
           schema:
             title: ruleDTO
             type: object
             items:
               $ref: '#/definitions/ruleGet'
+        404:
+          description: Rule not found
+          
     delete:
       parameters:
         - name: id
@@ -417,7 +451,9 @@ paths:
           required: true
       responses:
         200:
-          description: Delete the rule with badge id
+          description: Rule deleted successfully
+        404:
+          description: Rule not found
 
 
 

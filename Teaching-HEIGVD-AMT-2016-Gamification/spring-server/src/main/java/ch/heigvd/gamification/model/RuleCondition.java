@@ -14,22 +14,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class RuleCondition {
 
-    public String getRuleCondition() {
-        return ruleCondition;
-    }
-
-    public void setRuleCondition(String ruleCondition) {
-        this.ruleCondition = ruleCondition;
-    }
-
-    public Rule getRule() {
-        return rule;
-    }
-
-    public void setRule(Rule rule) {
-        this.rule = rule;
-    }
-    
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
@@ -46,6 +30,22 @@ public class RuleCondition {
     public RuleCondition (Rule rule, String ruleCondition){
         this.rule = rule;
         this.ruleCondition = ruleCondition;
+    }
+    
+    public String getRuleCondition() {
+        return ruleCondition;
+    }
+
+    public void setRuleCondition(String ruleCondition) {
+        this.ruleCondition = ruleCondition;
+    }
+
+    public Rule getRule() {
+        return rule;
+    }
+
+    public void setRule(Rule rule) {
+        this.rule = rule;
     }
     
 }

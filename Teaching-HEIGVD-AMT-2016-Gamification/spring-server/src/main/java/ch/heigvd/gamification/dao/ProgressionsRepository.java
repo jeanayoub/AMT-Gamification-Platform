@@ -13,6 +13,6 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author marco
  */
-public interface ProgressionRepository extends CrudRepository <Progression, Long>{
+public interface ProgressionsRepository extends CrudRepository <Progression, Long>{
     LinkedList<Progression> findAll();
 }

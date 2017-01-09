@@ -135,6 +135,4 @@ public class Application {
     public List<PointScale> getPointScaleList() {
         return pointScaleList;
     }
-    
-        
 }

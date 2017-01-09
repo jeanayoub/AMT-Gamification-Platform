@@ -7,10 +7,7 @@ package ch.heigvd.gamification.api;
 
 import ch.heigvd.gamification.api.dto.PointScaleGet;
 import ch.heigvd.gamification.api.dto.PointScalePost;
-import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
-import ch.heigvd.gamification.dao.PointScaleRepository;
-import ch.heigvd.gamification.dao.RuleRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.PointScale;
 import java.net.URI;
@@ -21,17 +18,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ch.heigvd.gamification.dao.ApplicationsRepository;
+import ch.heigvd.gamification.dao.PointScalesRepository;
+import ch.heigvd.gamification.dao.RulesRepository;
 
 @RestController
 public class PointScaleEndPoint implements PointScalesApi{
 
-    RuleRepository ruleRepository;
-    ApplicationRepository applicationRepository;
+    RulesRepository ruleRepository;
+    ApplicationsRepository applicationRepository;
     BadgesRepository badgesRepository;
-    PointScaleRepository pointScaleRepository;
+    PointScalesRepository pointScaleRepository;
     
     @Autowired
-    PointScaleEndPoint(RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository) {
+    PointScaleEndPoint(RulesRepository ruleRepository, ApplicationsRepository applicationRepository, BadgesRepository badgesRepository, PointScalesRepository pointScaleRepository) {
             this.ruleRepository = ruleRepository;
             this.applicationRepository = applicationRepository;
             this.badgesRepository = badgesRepository;
@@ -88,10 +88,8 @@ public class PointScaleEndPoint implements PointScalesApi{
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> pointScalesIdPut(@PathVariable Long id, @RequestBody PointScalePost pointScaleDTO, @RequestHeader String token) {
         if(pointScaleRepository.exists(id)){
-            //TODO finir le put
-            //pointScaleRepository.findOne(id).setName(pointScaleDTO.getName());
-            //pointScaleRepository.findOne(id).setApplication(pointScaleDTO.get);
-
+            
+            pointScaleRepository.findOne(id).setName(pointScaleDTO.getName());            
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
                     .buildAndExpand(id).toUri();

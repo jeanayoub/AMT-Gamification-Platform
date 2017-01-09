@@ -39,7 +39,6 @@ public class User {
     
     }
 
-  
     public User(Long userAppId, Application application){
         this.userAppId = userAppId;
         this.application = application;

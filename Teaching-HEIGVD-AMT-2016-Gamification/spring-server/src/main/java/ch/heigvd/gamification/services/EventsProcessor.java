@@ -5,13 +5,7 @@
  */
 package ch.heigvd.gamification.services;
 
-import ch.heigvd.gamification.dao.ApplicationRepository;
-import ch.heigvd.gamification.dao.AwardRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
-import ch.heigvd.gamification.dao.PointScaleRepository;
-import ch.heigvd.gamification.dao.ProgressionRepository;
-import ch.heigvd.gamification.dao.RuleRepository;
-import ch.heigvd.gamification.dao.UserRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Award;
 import ch.heigvd.gamification.model.BadgeAward;
@@ -25,17 +19,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
+import ch.heigvd.gamification.dao.ApplicationsRepository;
+import ch.heigvd.gamification.dao.AwardsRepository;
+import ch.heigvd.gamification.dao.PointScalesRepository;
+import ch.heigvd.gamification.dao.ProgressionsRepository;
+import ch.heigvd.gamification.dao.RulesRepository;
+import ch.heigvd.gamification.dao.UsersRepository;
 
 @Service
 public class EventsProcessor {
 
-    RuleRepository ruleRepository;
-    UserRepository userRepository;
-    ApplicationRepository applicationRepository;
+    RulesRepository ruleRepository;
+    UsersRepository userRepository;
+    ApplicationsRepository applicationRepository;
     BadgesRepository badgesRepository;
-    PointScaleRepository pointScaleRepository;
-    AwardRepository awardRepository;
-    ProgressionRepository progressionRepository;
+    PointScalesRepository pointScaleRepository;
+    AwardsRepository awardRepository;
+    ProgressionsRepository progressionRepository;
 
    /* @Autowired
     EventsProcessor(RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository, UserRepository userRepository, ProgressionRepository progressionRepository) {
@@ -47,7 +47,7 @@ public class EventsProcessor {
             this.progressionRepository = progressionRepository;
             
     }*/
-    public EventsProcessor(UserRepository userRepository, ApplicationRepository applicationRepository, AwardRepository awardRepository, PointScaleRepository pointScaleRepository, ProgressionRepository progressionRepository) {
+    public EventsProcessor(UsersRepository userRepository, ApplicationsRepository applicationRepository, AwardsRepository awardRepository, PointScalesRepository pointScaleRepository, ProgressionsRepository progressionRepository) {
         this.userRepository = userRepository;
         this.applicationRepository = applicationRepository;
         this.awardRepository = awardRepository;
@@ -61,9 +61,7 @@ public class EventsProcessor {
         User userTmp = userRepository.findOne(userId);
         Application appTmp = applicationRepository.findOne(appId);
         boolean badgeReward = true;
-        
 
-        
         for (Rule rule : appTmp.getRuleList()) {
             // For all matching rules.
             if (rule.getTypeEvent().equalsIgnoreCase(eventType)) {

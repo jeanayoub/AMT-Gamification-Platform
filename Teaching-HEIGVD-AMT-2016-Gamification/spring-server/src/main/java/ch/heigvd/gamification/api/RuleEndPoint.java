@@ -8,10 +8,7 @@ package ch.heigvd.gamification.api;
 import ch.heigvd.gamification.api.dto.RuleGet;
 import ch.heigvd.gamification.api.dto.RulePost;
 import ch.heigvd.gamification.api.dto.EventTest;
-import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
-import ch.heigvd.gamification.dao.PointScaleRepository;
-import ch.heigvd.gamification.dao.RuleRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
 import ch.heigvd.gamification.model.RuleCondition;
@@ -29,19 +26,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ch.heigvd.gamification.dao.RuleConditionRepository;
+import ch.heigvd.gamification.dao.ApplicationsRepository;
+import ch.heigvd.gamification.dao.PointScalesRepository;
+import ch.heigvd.gamification.dao.RuleConditionsRepository;
+import ch.heigvd.gamification.dao.RulesRepository;
 
 @RestController
 public class RuleEndPoint implements RulesApi {
     
-    RuleRepository ruleRepository;
-    ApplicationRepository applicationRepository;
+    RulesRepository ruleRepository;
+    ApplicationsRepository applicationRepository;
     BadgesRepository badgesRepository;
-    PointScaleRepository pointScaleRepository;
-    RuleConditionRepository conditionRepository;
+    PointScalesRepository pointScaleRepository;
+    RuleConditionsRepository conditionRepository;
     
     @Autowired
-    RuleEndPoint(RuleConditionRepository conditionRepository, RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository) {
+    RuleEndPoint(RuleConditionsRepository conditionRepository, RulesRepository ruleRepository, ApplicationsRepository applicationRepository, BadgesRepository badgesRepository, PointScalesRepository pointScaleRepository) {
             this.conditionRepository = conditionRepository;
             this.ruleRepository = ruleRepository;
             this.applicationRepository = applicationRepository;

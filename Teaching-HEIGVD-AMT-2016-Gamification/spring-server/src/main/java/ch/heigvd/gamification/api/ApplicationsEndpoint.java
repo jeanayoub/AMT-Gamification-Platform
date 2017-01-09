@@ -7,7 +7,6 @@ import ch.heigvd.gamification.api.dto.ApplicationGet;
 import ch.heigvd.gamification.api.dto.ApplicationPost;
 import ch.heigvd.gamification.api.dto.BadgeGet;
 import ch.heigvd.gamification.api.dto.EventGet;
-import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
@@ -16,6 +15,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,17 +25,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ch.heigvd.gamification.dao.ApplicationsRepository;
 
 
 @RestController
 public class ApplicationsEndpoint implements ApplicationsApi {
 
-    ApplicationRepository applicationRepository;
+    ApplicationsRepository applicationRepository;
     BadgesRepository badgesRepository;
     
     
     @Autowired
-    ApplicationsEndpoint(BadgesRepository badgesRepository, ApplicationRepository applicationRepository) {
+    ApplicationsEndpoint(BadgesRepository badgesRepository, ApplicationsRepository applicationRepository) {
             this.applicationRepository = applicationRepository;
             this.badgesRepository = badgesRepository;
     }
@@ -79,7 +80,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
             return ResponseEntity.ok().body(toDTO(applicationRepository.findOne(id)));
         }
          
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
     @Override
@@ -90,16 +91,18 @@ public class ApplicationsEndpoint implements ApplicationsApi {
             return ResponseEntity.ok().body(applicationEventGetToDTO(applicationRepository.findOne(id)));   
         }
         
-        return null;
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
     @Override
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.PUT) 
-    public ResponseEntity<Object> applicationsIdPut(@PathVariable Long id, ApplicationPost application) {
+    public ResponseEntity<Object> applicationsIdPut(@PathVariable Long id, @RequestBody ApplicationPost application) {
          
         if(applicationRepository.exists(id)){
             applicationRepository.findOne(id).setName(application.getName());
             applicationRepository.findOne(id).setDescription(application.getDescription());
+            applicationRepository.findOne(id).setPassword(application.getPassword());
+
             
             URI location = ServletUriComponentsBuilder
                             .fromCurrentRequest().path("/{id}")
@@ -107,7 +110,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
 
             return ResponseEntity.ok(location);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
     @Override
@@ -118,19 +121,19 @@ public class ApplicationsEndpoint implements ApplicationsApi {
             applicationRepository.delete(id);
             return ResponseEntity.ok().body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
     @Override
     @RequestMapping(value = "/applications/{id}/badges/{idBadge}", method = RequestMethod.GET) 
     public ResponseEntity<Object> applicationsIdBadgesIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
         
-        if(badgesRepository.findOne(idBadge).getApplication().getId() == id){
+        if(Objects.equals(badgesRepository.findOne(idBadge).getApplication().getId(), id)){
         
             return ResponseEntity.ok().body(badgeToDTO(badgesRepository.findOne(idBadge)));
         }
         
-        return ResponseEntity.ok().body(null);
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     // Used to return all event for an application

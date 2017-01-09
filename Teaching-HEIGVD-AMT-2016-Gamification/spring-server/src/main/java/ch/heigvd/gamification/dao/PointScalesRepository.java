@@ -13,6 +13,6 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author marco
  */
-public interface PointScaleRepository extends CrudRepository <PointScale, Long> {
+public interface PointScalesRepository extends CrudRepository <PointScale, Long> {
     LinkedList<PointScale> findAll();
 }

@@ -7,7 +7,6 @@ package ch.heigvd.gamification.api;
 
 import ch.heigvd.gamification.api.dto.BadgeGet;
 import ch.heigvd.gamification.api.dto.BadgePost;
-import ch.heigvd.gamification.dao.ApplicationRepository;
 import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ch.heigvd.gamification.dao.ApplicationsRepository;
 
 /**
  *
@@ -33,10 +33,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class BadgesEndpoint implements BadgesApi {
 
     BadgesRepository badgesRepository;
-    ApplicationRepository applicationsRepository;
+    ApplicationsRepository applicationsRepository;
     
     @Autowired
-    BadgesEndpoint(BadgesRepository badgesRepository, ApplicationRepository applicationsRepository) {
+    BadgesEndpoint(BadgesRepository badgesRepository, ApplicationsRepository applicationsRepository) {
             this.badgesRepository = badgesRepository;
             this.applicationsRepository = applicationsRepository;
     }
@@ -94,7 +94,7 @@ public class BadgesEndpoint implements BadgesApi {
             badgesRepository.delete(id);
             return ResponseEntity.ok().body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
     @Override
@@ -103,9 +103,11 @@ public class BadgesEndpoint implements BadgesApi {
         
         if(badgesRepository.exists(id)){
         
-            badgesRepository.findOne(id).setName(badge.getName());
-            badgesRepository.findOne(id).setDescription(badge.getDescription());
-            badgesRepository.findOne(id).setIcon(badge.getIcon());
+            Badge existingBadge = badgesRepository.findOne(id);
+            existingBadge.setIcon(badge.getIcon());
+            existingBadge.setDescription(badge.getDescription());
+            existingBadge.setName(badge.getName());
+            badgesRepository.save(existingBadge);
 
             URI location = ServletUriComponentsBuilder
                             .fromCurrentRequest().path("/{id}")
@@ -113,7 +115,7 @@ public class BadgesEndpoint implements BadgesApi {
 
             return ResponseEntity.ok(location);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
     public BadgeGet toDTO(Badge badge){

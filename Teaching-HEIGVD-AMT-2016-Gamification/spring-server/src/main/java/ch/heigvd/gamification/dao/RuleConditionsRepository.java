@@ -5,7 +5,7 @@
  */
 package ch.heigvd.gamification.dao;
 
-import ch.heigvd.gamification.model.User;
+import ch.heigvd.gamification.model.RuleCondition;
 import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,6 +13,6 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author marco
  */
-public interface UserRepository extends CrudRepository <User, Long>{
-    LinkedList<User> findAll();
+public interface RuleConditionsRepository extends CrudRepository <RuleCondition, Long>{
+    LinkedList<RuleCondition> findAll();    
 }

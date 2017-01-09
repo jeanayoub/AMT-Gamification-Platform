@@ -13,7 +13,7 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author marco
  */
-public interface ApplicationRepository  extends CrudRepository <Application, Long> {
+public interface ApplicationsRepository  extends CrudRepository <Application, Long> {
     LinkedList<Application> findAll();
     Application findByName(String name);
 }

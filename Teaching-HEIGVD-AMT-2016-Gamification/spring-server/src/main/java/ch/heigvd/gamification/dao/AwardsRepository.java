@@ -5,15 +5,13 @@
  */
 package ch.heigvd.gamification.dao;
 
-import ch.heigvd.gamification.model.Rule;
-import java.util.LinkedList;
+import ch.heigvd.gamification.model.Award;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  *
  * @author marco
  */
-public interface RuleRepository extends CrudRepository <Rule, Long>{
-    LinkedList<Rule> findAll();
-   // LinkedList<Rule> findAllByApplicationId();
+public interface AwardsRepository extends CrudRepository <Award, Long> {
+    
 }

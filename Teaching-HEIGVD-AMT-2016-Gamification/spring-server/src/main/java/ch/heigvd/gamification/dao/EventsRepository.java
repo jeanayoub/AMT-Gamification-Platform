@@ -5,7 +5,7 @@
  */
 package ch.heigvd.gamification.dao;
 
-import ch.heigvd.gamification.model.RuleCondition;
+import ch.heigvd.gamification.model.Event;
 import java.util.LinkedList;
 import org.springframework.data.repository.CrudRepository;
 
@@ -13,6 +13,6 @@ import org.springframework.data.repository.CrudRepository;
  *
  * @author marco
  */
-public interface RuleConditionRepository extends CrudRepository <RuleCondition, Long>{
-    LinkedList<RuleCondition> findAll();    
+public interface EventsRepository extends CrudRepository <Event, Long> {
+    LinkedList<Event> findAll();
 }

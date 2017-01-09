@@ -7,12 +7,6 @@ package ch.heigvd.gamification.api;
 
 import ch.heigvd.gamification.services.EventsProcessor;
 import ch.heigvd.gamification.api.dto.EventPost;
-import ch.heigvd.gamification.dao.ApplicationRepository;
-import ch.heigvd.gamification.dao.AwardRepository;
-import ch.heigvd.gamification.dao.EventRepository;
-import ch.heigvd.gamification.dao.PointScaleRepository;
-import ch.heigvd.gamification.dao.ProgressionRepository;
-import ch.heigvd.gamification.dao.UserRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Event;
 import ch.heigvd.gamification.model.Progression;
@@ -27,22 +21,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ch.heigvd.gamification.dao.ApplicationsRepository;
+import ch.heigvd.gamification.dao.AwardsRepository;
+import ch.heigvd.gamification.dao.EventsRepository;
+import ch.heigvd.gamification.dao.PointScalesRepository;
+import ch.heigvd.gamification.dao.ProgressionsRepository;
+import ch.heigvd.gamification.dao.UsersRepository;
 
 @RestController
 public class EventEndpoint implements EventsApi {
     
     
     EventsProcessor eventsProcessor;
-    EventRepository eventRepository;
-    ApplicationRepository applicationRepository;
-    UserRepository userRepository;
-    AwardRepository awardRepository;
-    PointScaleRepository pointScaleRepository;
-    ProgressionRepository progressionRepository;
+    EventsRepository eventRepository;
+    ApplicationsRepository applicationRepository;
+    UsersRepository userRepository;
+    AwardsRepository awardRepository;
+    PointScalesRepository pointScaleRepository;
+    ProgressionsRepository progressionRepository;
     
     
     @Autowired
-    EventEndpoint(EventRepository eventRepository, ApplicationRepository applicationRepository, UserRepository userRepository, AwardRepository awardRepository,PointScaleRepository pointScaleRepository, ProgressionRepository progressionRepository, EventsProcessor eventsProcessor) {
+    EventEndpoint(EventsRepository eventRepository, ApplicationsRepository applicationRepository, UsersRepository userRepository, AwardsRepository awardRepository,PointScalesRepository pointScaleRepository, ProgressionsRepository progressionRepository, EventsProcessor eventsProcessor) {
             this.applicationRepository = applicationRepository;
             this.eventRepository = eventRepository;
             this.userRepository = userRepository;
@@ -98,11 +98,5 @@ public class EventEndpoint implements EventsApi {
             return ResponseEntity.created(location).build();
         }
         return ResponseEntity.created(null).build();
-        
-        
-    }
-    
-    
-    
-    
+    } 
 }
