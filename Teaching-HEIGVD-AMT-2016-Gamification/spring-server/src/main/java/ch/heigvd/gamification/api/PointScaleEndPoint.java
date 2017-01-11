@@ -13,6 +13,8 @@ import ch.heigvd.gamification.model.PointScale;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +56,7 @@ public class PointScaleEndPoint implements PointScalesApi{
             tmpPS.setId(ps.getId());
             tmpPS.setName(ps.getName());
             tmpPS.setApllicationName(ps.getApplication().getName());
-            tmpPS.setApplicationId(ps.getApplication().getId());
+            //tmpPS.setApplicationId(ps.getApplication().getId());
             
             
             listTmpDtoGet.add(tmpPS);
@@ -74,6 +76,20 @@ public class PointScaleEndPoint implements PointScalesApi{
     }
 
     @Override
+    @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<Object> pointScalesIdPut(@ApiParam(value = "id of the pointScale to modify", required = true) @PathVariable("id") Long id, @ApiParam(value = "The new values for an existing pointScale", required = true) @RequestBody PointScalePost pointScaleDTO) {
+        if(pointScaleRepository.exists(id)){
+            pointScaleRepository.findOne(id).setName(pointScaleDTO.getName());
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(id).toUri();
+
+            return ResponseEntity.ok(location);
+        }
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
+
+    @Override
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> pointScalesIdDelete(Long id) {
         if(pointScaleRepository.exists(id)){
@@ -83,8 +99,8 @@ public class PointScaleEndPoint implements PointScalesApi{
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 
-
-    @Override
+    /*@Override
+    OLD
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> pointScalesIdPut(@PathVariable Long id, @RequestBody PointScalePost pointScaleDTO, @RequestHeader String token) {
         if(pointScaleRepository.exists(id)){
@@ -97,7 +113,7 @@ public class PointScaleEndPoint implements PointScalesApi{
             return ResponseEntity.ok(location);
         }
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-    }
+    }*/
 
     @Override
     @RequestMapping(value = "/pointScales", method = RequestMethod.POST)
