@@ -57,7 +57,7 @@ public class RuleEndPoint implements RulesApi {
 
     @Override
     @RequestMapping(value = "/rules", method = RequestMethod.GET)
-    public ResponseEntity<List<RuleGet>> rulesGet() throws ClassNotFoundException, IntrospectionException {
+    public ResponseEntity<List<RuleGet>> rulesGet() {
 
         LinkedList<Rule> listTmp = ruleRepository.findAll();
         LinkedList<RuleGet> listTmpDtoGet = new LinkedList<RuleGet>();

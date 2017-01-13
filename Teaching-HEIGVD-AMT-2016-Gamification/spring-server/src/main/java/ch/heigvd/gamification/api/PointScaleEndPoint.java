@@ -76,6 +76,11 @@ public class PointScaleEndPoint implements PointScalesApi{
     }
 
     @Override
+    public ResponseEntity<Object> pointScalesIdPut(Long id, PointScalePost pointScaleDTO, String token) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    /*@Override
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> pointScalesIdPut(@ApiParam(value = "id of the pointScale to modify", required = true) @PathVariable("id") Long id, @ApiParam(value = "The new values for an existing pointScale", required = true) @RequestBody PointScalePost pointScaleDTO) {
         if(pointScaleRepository.exists(id)){
@@ -87,7 +92,7 @@ public class PointScaleEndPoint implements PointScalesApi{
             return ResponseEntity.ok(location);
         }
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-    }
+    }*/
 
     @Override
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.DELETE)
@@ -131,4 +136,6 @@ public class PointScaleEndPoint implements PointScalesApi{
         return ResponseEntity.created(location).build();
         
     }
+
+    
 }
