@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
+import ch.heigvd.gamification.utils.toDTO;
 
 /**
  *
@@ -49,7 +50,7 @@ public class BadgesEndpoint implements BadgesApi {
         LinkedList<BadgeGet> listTmpDtoGet = new LinkedList<BadgeGet>();
         
         for(Badge badge : listTmp){
-            listTmpDtoGet.add(toDTO(badge));
+            listTmpDtoGet.add(toDTO.badgetoDTO(badge));
         }
         
         return ResponseEntity.ok().body(listTmpDtoGet);
@@ -59,7 +60,7 @@ public class BadgesEndpoint implements BadgesApi {
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.GET)    
     public ResponseEntity<Object> badgesIdGet(@PathVariable Long id) {
         if(badgesRepository.exists(id)){
-            return ResponseEntity.ok().body(toDTO(badgesRepository.findOne(id)));
+            return ResponseEntity.ok().body(toDTO.badgetoDTO(badgesRepository.findOne(id)));
         }
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
        
@@ -118,12 +119,5 @@ public class BadgesEndpoint implements BadgesApi {
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
-    public static BadgeGet toDTO(Badge badge){
-        BadgeGet badgeGet = new BadgeGet();
-        badgeGet.setId(badge.getId());
-        badgeGet.setName(badge.getName());
-        badgeGet.setDescription(badge.getDescription());
-        badgeGet.setIcon(badge.getIcon());
-        return badgeGet; 
-    }
+
 }

@@ -105,6 +105,8 @@ public class RuleEndPoint implements RulesApi {
             //tmpRule.setPointScale(ruleDTO.getPointScale);
             //tmpRule.setBadge(ruleDTO.getBage);
 
+            ruleDTO.getAwardBadgeId();
+            ruleDTO.getAwardPointScaleId();
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
                     .buildAndExpand(id).toUri();

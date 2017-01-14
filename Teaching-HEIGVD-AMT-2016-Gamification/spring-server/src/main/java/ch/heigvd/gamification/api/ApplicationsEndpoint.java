@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
+import ch.heigvd.gamification.utils.toDTO;
 
 
 @RestController
@@ -65,7 +66,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         LinkedList<ApplicationGet> listTmpDtoGet = new LinkedList<ApplicationGet>();
         
         for(Application application : listTmp){
-            listTmpDtoGet.add(toDTO(application));
+            listTmpDtoGet.add(toDTO.applicationtoDTO(application));
         }
         return ResponseEntity.ok().body(listTmpDtoGet);
     }
@@ -75,7 +76,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     public ResponseEntity<Object> applicationsIdGet(@PathVariable Long id) {
     
         if(applicationRepository.exists(id)){
-            return ResponseEntity.ok().body(toDTO(applicationRepository.findOne(id)));
+            return ResponseEntity.ok().body(toDTO.applicationtoDTO(applicationRepository.findOne(id)));
         }
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -126,7 +127,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     public ResponseEntity<Object> applicationsIdBadgesIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
         
         if(Objects.equals(badgesRepository.findOne(idBadge).getApplication().getId(), id)){
-            return ResponseEntity.ok().body(BadgesEndpoint.toDTO((badgesRepository.findOne(idBadge))));
+            return ResponseEntity.ok().body(toDTO.badgetoDTO((badgesRepository.findOne(idBadge))));
         }
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -137,7 +138,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         List<Object> eventList = new ArrayList<>();
         
         for(Event event : application.getEventList()){
-            eventList.add(eventToDTO(event));
+            eventList.add(toDTO.eventToDTO(event));
         }
         
         ApplicationEventGet applicationEventGet = new ApplicationEventGet();
@@ -145,34 +146,5 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         return applicationEventGet;    
         
     }
-       
-    public EventGet eventToDTO(Event event){
-    
-            EventGet eventGet = new EventGet();
-            eventGet.setId(event.getId());
-            eventGet.setUserExtAppId(event.getUserAppId());
-            eventGet.setEventType(event.getEventType());
-            eventGet.setUserId(event.getUser().getId());
-            
-            return eventGet;
-    }
-    
-    public ApplicationGet toDTO(Application application){
-        
-        LinkedList<String> listBadgesUrl = new LinkedList<String>();
-        
-        ApplicationGet appGetTmp = new ApplicationGet();
-        appGetTmp.setId(application.getId());
-        appGetTmp.setName(application.getName());
-        appGetTmp.setDescription(application.getDescription());
-        
-        
-        for(Badge badge : application.getBadges()){
-            listBadgesUrl.add("api/badges/" + badge.getId());
-        }
-        
-        appGetTmp.setBadgesList(listBadgesUrl);
-        
-        return appGetTmp;  
-    } 
+
 }
