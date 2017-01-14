@@ -14,14 +14,8 @@ import ch.heigvd.gamification.model.Badge;
 import ch.heigvd.gamification.model.RuleCondition;
 import ch.heigvd.gamification.model.PointScale;
 import ch.heigvd.gamification.model.Rule;
-import ch.heigvd.gamification.model.User;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -149,11 +143,7 @@ public class RuleEndPoint implements RulesApi {
                 for (String str : ruleDTO.getConditions()) {
                     RuleCondition ruleConditionTmp = new RuleCondition(rule, str);
                     conditionRepository.save(ruleConditionTmp);
-                    //listCondition.add(cacaTmp);
                 }
-
-                //rule.setListCondition(listCondition);
-
 
                 URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest().path("/{id}")
@@ -161,18 +151,8 @@ public class RuleEndPoint implements RulesApi {
                 return ResponseEntity.created(location).build();
 
             }
-            
-           /* //Update all the users Awards
-            for (User user : appTmp.getUserList()){
-                
-            }*/
-        }
 
-        EventTest test = new EventTest();
-        //test.keySet()
-        //test.g
-        //test.
-        //test.getProperties().getNewValue();
+        }
 
         return ResponseEntity.created(null).build();
     }

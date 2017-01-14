@@ -44,10 +44,10 @@ public class Badge {
     /**
      * This is the only constructor for a badge. It requires all the parameters.
      *
-     * @param id
      * @param name
      * @param description
      * @param icon
+     * @param application
      */
     public Badge(String name, String description, String icon, Application application) {
         this.name = name;

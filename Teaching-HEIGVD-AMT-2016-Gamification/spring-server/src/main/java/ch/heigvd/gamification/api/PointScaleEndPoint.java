@@ -14,7 +14,6 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,13 +73,11 @@ public class PointScaleEndPoint implements PointScalesApi{
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 
     }
-    
+
 
     @Override
     public ResponseEntity<Object> pointScalesIdPut(Long id, PointScalePost pointScaleDTO, String token) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-
     }
     
     /*@Override

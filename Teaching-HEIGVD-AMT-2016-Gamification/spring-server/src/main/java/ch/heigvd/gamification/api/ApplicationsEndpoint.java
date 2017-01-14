@@ -5,7 +5,6 @@ import ch.heigvd.gamification.api.ApplicationsApi;
 import ch.heigvd.gamification.api.dto.ApplicationEventGet;
 import ch.heigvd.gamification.api.dto.ApplicationGet;
 import ch.heigvd.gamification.api.dto.ApplicationPost;
-import ch.heigvd.gamification.api.dto.BadgeGet;
 import ch.heigvd.gamification.api.dto.EventGet;
 import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.model.Application;

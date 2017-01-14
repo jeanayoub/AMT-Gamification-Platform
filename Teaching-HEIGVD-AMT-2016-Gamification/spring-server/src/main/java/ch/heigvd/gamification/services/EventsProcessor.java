@@ -7,7 +7,6 @@ package ch.heigvd.gamification.services;
 
 import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.model.Application;
-import ch.heigvd.gamification.model.Award;
 import ch.heigvd.gamification.model.BadgeAward;
 import ch.heigvd.gamification.model.PointAward;
 import ch.heigvd.gamification.model.Progression;
@@ -16,9 +15,8 @@ import ch.heigvd.gamification.model.RuleCondition;
 import ch.heigvd.gamification.model.User;
 import java.util.Date;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestController;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
 import ch.heigvd.gamification.dao.AwardsRepository;
 import ch.heigvd.gamification.dao.PointScalesRepository;
