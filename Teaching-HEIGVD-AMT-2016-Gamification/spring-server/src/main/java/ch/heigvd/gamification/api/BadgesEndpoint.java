@@ -118,9 +118,7 @@ public class BadgesEndpoint implements BadgesApi {
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
-    public BadgeGet toDTO(Badge badge){
-    
-       
+    public static BadgeGet toDTO(Badge badge){
         BadgeGet badgeGet = new BadgeGet();
         badgeGet.setId(badge.getId());
         badgeGet.setName(badge.getName());

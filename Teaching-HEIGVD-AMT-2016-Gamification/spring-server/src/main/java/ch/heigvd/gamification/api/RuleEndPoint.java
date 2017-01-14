@@ -103,13 +103,14 @@ public class RuleEndPoint implements RulesApi {
     @RequestMapping(value = "/rules/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Object> rulesIdPut(@PathVariable Long id, @RequestBody RulePost ruleDTO) {
         if(ruleRepository.exists(id)){
-            //TODO set application
-            //ruleRepository.findOne(id).setApplication();
-            //TODO ruleRepository.findOne(id).setBadge(ruleDTO.get);
-            ruleRepository.findOne(id).setPoint(ruleDTO.getPoint());
-            //TODO ruleRepository.findOne(id).setPointScale
-            ruleRepository.findOne(id).setTypeEvent(ruleDTO.getEventType());
-            //TODO ruleRepository.findOne(id).setListCondition(ruleDTO.getConditions()) getConditions est un stting, alors que un type condition est demandé
+            Rule tmpRule = ruleRepository.findOne(id);
+            tmpRule.setPoint(ruleDTO.getPoint());
+            tmpRule.setTypeEvent(ruleDTO.getEventType());
+
+            //TODO do this
+            //tmpRule.setPointScale(ruleDTO.getPointScale);
+            //tmpRule.setBadge(ruleDTO.getBage);
+
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest().path("/{id}")
                     .buildAndExpand(id).toUri();

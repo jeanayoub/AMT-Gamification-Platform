@@ -74,10 +74,13 @@ public class PointScaleEndPoint implements PointScalesApi{
         return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 
     }
+    
 
     @Override
     public ResponseEntity<Object> pointScalesIdPut(Long id, PointScalePost pointScaleDTO, String token) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+
     }
     
     /*@Override

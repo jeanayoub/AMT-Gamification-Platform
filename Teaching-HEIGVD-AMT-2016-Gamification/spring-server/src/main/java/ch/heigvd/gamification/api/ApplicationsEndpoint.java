@@ -68,7 +68,6 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         for(Application application : listTmp){
             listTmpDtoGet.add(toDTO(application));
         }
-        
         return ResponseEntity.ok().body(listTmpDtoGet);
     }
     
@@ -79,7 +78,6 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         if(applicationRepository.exists(id)){
             return ResponseEntity.ok().body(toDTO(applicationRepository.findOne(id)));
         }
-         
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
@@ -90,7 +88,6 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         if(applicationRepository.findOne(id) != null){
             return ResponseEntity.ok().body(applicationEventGetToDTO(applicationRepository.findOne(id)));   
         }
-        
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
     
@@ -99,11 +96,12 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     public ResponseEntity<Object> applicationsIdPut(@PathVariable Long id, @RequestBody ApplicationPost application) {
          
         if(applicationRepository.exists(id)){
-            applicationRepository.findOne(id).setName(application.getName());
-            applicationRepository.findOne(id).setDescription(application.getDescription());
-            applicationRepository.findOne(id).setPassword(application.getPassword());
+            Application tmpApp = applicationRepository.findOne(id);
+            tmpApp.setName(application.getName());
+            tmpApp.setPassword(application.getPassword());
+            tmpApp.setDescription(application.getDescription());
+            applicationRepository.save(tmpApp);
 
-            
             URI location = ServletUriComponentsBuilder
                             .fromCurrentRequest().path("/{id}")
                             .buildAndExpand(id).toUri();
@@ -129,10 +127,8 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     public ResponseEntity<Object> applicationsIdBadgesIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
         
         if(Objects.equals(badgesRepository.findOne(idBadge).getApplication().getId(), id)){
-        
-            return ResponseEntity.ok().body(badgeToDTO(badgesRepository.findOne(idBadge)));
+            return ResponseEntity.ok().body(BadgesEndpoint.toDTO((badgesRepository.findOne(idBadge))));
         }
-        
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 
@@ -150,17 +146,6 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         return applicationEventGet;    
         
     }
-    
-    public BadgeGet badgeToDTO(Badge badge){
-    
-       
-        BadgeGet badgeGet = new BadgeGet();
-        badgeGet.setId(badge.getId());
-        badgeGet.setName(badge.getName());
-        badgeGet.setDescription(badge.getDescription());
-        badgeGet.setIcon(badge.getIcon());
-        return badgeGet; 
-    }
        
     public EventGet eventToDTO(Event event){
     
@@ -171,7 +156,6 @@ public class ApplicationsEndpoint implements ApplicationsApi {
             eventGet.setUserId(event.getUser().getId());
             
             return eventGet;
-            
     }
     
     public ApplicationGet toDTO(Application application){
