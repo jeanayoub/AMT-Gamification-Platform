@@ -15,4 +15,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface UsersRepository extends CrudRepository <User, Long>{
     LinkedList<User> findAll();
+    LinkedList<User>findByApplicationId(Long id);
 }

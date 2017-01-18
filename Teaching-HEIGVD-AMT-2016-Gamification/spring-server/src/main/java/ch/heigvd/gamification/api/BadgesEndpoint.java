@@ -44,25 +44,40 @@ public class BadgesEndpoint implements BadgesApi {
     
     @Override
     @RequestMapping(value = "/badges", method = RequestMethod.GET)
-    public ResponseEntity<List<BadgeGet>> badgesGet() {
+    public ResponseEntity<List<BadgeGet>> badgesGet(@RequestHeader String token) {
         
-        LinkedList<Badge> listTmp = badgesRepository.findAll();
-        LinkedList<BadgeGet> listTmpDtoGet = new LinkedList<BadgeGet>();
-        
-        for(Badge badge : listTmp){
-            listTmpDtoGet.add(toDTO.badgetoDTO(badge));
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            
+            LinkedList<Badge> listTmp = badgesRepository.findByApplicationId(appTmp.getId());
+            LinkedList<BadgeGet> listTmpDtoGet = new LinkedList<BadgeGet>();
+
+            for(Badge badge : listTmp){
+                listTmpDtoGet.add(toDTO.badgetoDTO(badge));
+            }
+
+            return ResponseEntity.ok().body(listTmpDtoGet);
         }
-        
-        return ResponseEntity.ok().body(listTmpDtoGet);
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
     
     @Override
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.GET)    
-    public ResponseEntity<Object> badgesIdGet(@PathVariable Long id) {
-        if(badgesRepository.exists(id)){
-            return ResponseEntity.ok().body(toDTO.badgetoDTO(badgesRepository.findOne(id)));
+    public ResponseEntity<Object> badgesIdGet(@PathVariable Long id,  @RequestHeader String token) {
+        
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            if(badgesRepository.exists(id)){
+                
+               // System.out.println("-------------------------------");
+               // System.out.println(badgesRepository.findByBadgeIdApplicationId(id,id));
+                return ResponseEntity.ok().body(toDTO.badgetoDTO(badgesRepository.findOne(id)));
+            }
+            return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
        
     }
 
@@ -72,52 +87,67 @@ public class BadgesEndpoint implements BadgesApi {
         
         
         Application appTmp = applicationsRepository.findByName(token);
-        //if(appTmp != null){
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
             Badge badgeToCreate = new Badge( badge.getName(),
                                         badge.getDescription(),
                                         badge.getIcon(),
                                         appTmp);
         
             badgesRepository.save(badgeToCreate);
+            
+            appTmp.getBadgesList().add(badgeToCreate);
         
             URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest().path("/{id}")
                         .buildAndExpand(badgeToCreate.getId()).toUri();
 
             return ResponseEntity.created(location).build();
+        }
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @Override
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> badgesIdDelete(@PathVariable Long id) {
+    public ResponseEntity<Void> badgesIdDelete(@PathVariable Long id,  @RequestHeader String token) {
         
-        if(badgesRepository.exists(id)){
-            badgesRepository.delete(id);
-            return ResponseEntity.ok().body(null);
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            if(badgesRepository.exists(id)){
+                badgesRepository.delete(id);
+                return ResponseEntity.ok().body(null);
+            }
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @Override
     @RequestMapping(value = "/badges/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> badgesIdPut(@PathVariable Long id, @RequestBody BadgePost badge) {
+    public ResponseEntity<Object> badgesIdPut(@PathVariable Long id,  @RequestHeader String token, @RequestBody BadgePost badge) {
         
-        if(badgesRepository.exists(id)){
-        
-            Badge existingBadge = badgesRepository.findOne(id);
-            existingBadge.setIcon(badge.getIcon());
-            existingBadge.setDescription(badge.getDescription());
-            existingBadge.setName(badge.getName());
-            badgesRepository.save(existingBadge);
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            if(badgesRepository.exists(id)){
 
-            URI location = ServletUriComponentsBuilder
-                            .fromCurrentRequest().path("/{id}")
-                            .buildAndExpand(id).toUri();
+                Badge existingBadge = badgesRepository.findOne(id);
+                                
+                existingBadge.setIcon(badge.getIcon());
+                existingBadge.setDescription(badge.getDescription());
+                existingBadge.setName(badge.getName());
+                
+                badgesRepository.save(existingBadge);
 
-            return ResponseEntity.ok(location);
+                URI location = ServletUriComponentsBuilder
+                                .fromCurrentRequest().path("/{id}")
+                                .buildAndExpand(id).toUri();
+
+                return ResponseEntity.ok(location);
+            }
+            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
-    
-
 }

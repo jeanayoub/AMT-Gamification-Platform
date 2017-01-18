@@ -26,114 +26,123 @@ import ch.heigvd.gamification.dao.RulesRepository;
 @RestController
 public class PointScaleEndPoint implements PointScalesApi{
 
-    RulesRepository ruleRepository;
-    ApplicationsRepository applicationRepository;
+    RulesRepository rulesRepository;
+    ApplicationsRepository applicationsRepository;
     BadgesRepository badgesRepository;
     PointScalesRepository pointScaleRepository;
     
     @Autowired
     PointScaleEndPoint(RulesRepository ruleRepository, ApplicationsRepository applicationRepository, BadgesRepository badgesRepository, PointScalesRepository pointScaleRepository) {
-            this.ruleRepository = ruleRepository;
-            this.applicationRepository = applicationRepository;
+            this.rulesRepository = ruleRepository;
+            this.applicationsRepository = applicationRepository;
             this.badgesRepository = badgesRepository;
             this.pointScaleRepository = pointScaleRepository;
             
     }
 
 
-
-
     @Override
     @RequestMapping(value = "/pointScales", method = RequestMethod.GET)
-    public ResponseEntity<List<PointScaleGet>> pointScalesGet() {
+    public ResponseEntity<List<PointScaleGet>> pointScalesGet(@RequestHeader String token) {
 
-        LinkedList<PointScale> listTmp = pointScaleRepository.findAll();
-        LinkedList<PointScaleGet> listTmpDtoGet = new LinkedList<PointScaleGet>();
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            LinkedList<PointScale> listTmp = pointScaleRepository.findByApplicationId(appTmp.getId());
+            LinkedList<PointScaleGet> listTmpDtoGet = new LinkedList<PointScaleGet>();
 
-        for(PointScale ps : listTmp){
-            PointScaleGet tmpPS = new PointScaleGet();
-            tmpPS.setId(ps.getId());
-            tmpPS.setName(ps.getName());
-            tmpPS.setApllicationName(ps.getApplication().getName());
-            //tmpPS.setApplicationId(ps.getApplication().getId());
-            
-            
-            listTmpDtoGet.add(tmpPS);
+            for(PointScale ps : listTmp){
+                PointScaleGet tmpPS = new PointScaleGet();
+                tmpPS.setId(ps.getId());
+                tmpPS.setName(ps.getName());
+                tmpPS.setApllicationName(ps.getApplication().getName());
+
+                listTmpDtoGet.add(tmpPS);
+            }
+
+            return ResponseEntity.ok().body(listTmpDtoGet);
         }
-
-        return ResponseEntity.ok().body(listTmpDtoGet);
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @Override
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> pointScalesIdGet(@PathVariable Long id) {
-        if(pointScaleRepository.exists(id)){
-            return ResponseEntity.ok().body(pointScaleRepository.findOne(id));
+    public ResponseEntity<Object> pointScalesIdGet(@PathVariable Long id, @RequestHeader String token) {
+        
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            if(pointScaleRepository.exists(id)){
+                return ResponseEntity.ok().body(pointScaleRepository.findOne(id));
+            }
+            return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 
     }
 
 
     @Override
-    public ResponseEntity<Object> pointScalesIdPut(Long id, PointScalePost pointScaleDTO, String token) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    /*@Override
-    @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> pointScalesIdPut(@ApiParam(value = "id of the pointScale to modify", required = true) @PathVariable("id") Long id, @ApiParam(value = "The new values for an existing pointScale", required = true) @RequestBody PointScalePost pointScaleDTO) {
-        if(pointScaleRepository.exists(id)){
-            pointScaleRepository.findOne(id).setName(pointScaleDTO.getName());
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{id}")
-                    .buildAndExpand(id).toUri();
+    public ResponseEntity<Object> pointScalesIdPut(@PathVariable Long id, @RequestBody PointScalePost pointScaleDTO, @RequestHeader String token) {
+        
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            if(pointScaleRepository.exists(id)){
 
-            return ResponseEntity.ok(location);
+                PointScale pointScaleExisting = pointScaleRepository.findOne(id);
+
+                pointScaleExisting.setName(pointScaleDTO.getName());
+
+                pointScaleRepository.save(pointScaleExisting);
+
+                URI location = ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(id).toUri();
+
+                return ResponseEntity.ok(location);
+            }
+            return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-    }*/
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
 
     @Override
     @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> pointScalesIdDelete(Long id) {
-        if(pointScaleRepository.exists(id)){
-            pointScaleRepository.delete(id);
-            return ResponseEntity.ok().body(null);
+    public ResponseEntity<Void> pointScalesIdDelete(Long id, @RequestHeader String token) {
+        
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
+            if(pointScaleRepository.exists(id)){
+                pointScaleRepository.delete(id);
+                return ResponseEntity.ok().body(null);
+            }
+            return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
-
-    /*@Override
-    OLD
-    @RequestMapping(value = "/pointScales/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Object> pointScalesIdPut(@PathVariable Long id, @RequestBody PointScalePost pointScaleDTO, @RequestHeader String token) {
-        if(pointScaleRepository.exists(id)){
-            
-            pointScaleRepository.findOne(id).setName(pointScaleDTO.getName());            
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{id}")
-                    .buildAndExpand(id).toUri();
-
-            return ResponseEntity.ok(location);
-        }
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
-    }*/
 
     @Override
     @RequestMapping(value = "/pointScales", method = RequestMethod.POST)
     public ResponseEntity<Void> pointScalesPost(@RequestBody PointScalePost pointScaleDTO, @RequestHeader String token) {
         
-        Application appTmp = applicationRepository.findByName(token);
+         Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null){
         
-        PointScale pointScaleToCreate = new PointScale(appTmp, pointScaleDTO.getName());
-        pointScaleRepository.save(pointScaleToCreate);
-        
-        URI location = ServletUriComponentsBuilder
-                        .fromCurrentRequest().path("/{id}")
-                        .buildAndExpand(pointScaleToCreate.getId()).toUri();
+            PointScale pointScaleToCreate = new PointScale(appTmp, pointScaleDTO.getName());
+            pointScaleRepository.save(pointScaleToCreate);
+            
+            appTmp.getPointScaleList().add(pointScaleToCreate);
 
-        return ResponseEntity.created(location).build();
+            URI location = ServletUriComponentsBuilder
+                            .fromCurrentRequest().path("/{id}")
+                            .buildAndExpand(pointScaleToCreate.getId()).toUri();
+
+            return ResponseEntity.created(location).build();
+        }
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         
     }
 

@@ -15,4 +15,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface EventsRepository extends CrudRepository <Event, Long> {
     LinkedList<Event> findAll();
+    LinkedList<Event>findByApplicationId(Long id);
 }

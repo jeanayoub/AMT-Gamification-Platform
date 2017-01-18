@@ -15,5 +15,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface RulesRepository extends CrudRepository <Rule, Long>{
     LinkedList<Rule> findAll();
-   // LinkedList<Rule> findAllByApplicationId();
+    
+    LinkedList<Rule>findByApplicationId(Long id);
 }

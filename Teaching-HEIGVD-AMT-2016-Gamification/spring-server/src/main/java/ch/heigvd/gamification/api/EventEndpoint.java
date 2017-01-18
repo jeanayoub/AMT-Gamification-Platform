@@ -27,6 +27,7 @@ import ch.heigvd.gamification.dao.EventsRepository;
 import ch.heigvd.gamification.dao.PointScalesRepository;
 import ch.heigvd.gamification.dao.ProgressionsRepository;
 import ch.heigvd.gamification.dao.UsersRepository;
+import org.springframework.http.HttpStatus;
 
 @RestController
 public class EventEndpoint implements EventsApi {
@@ -65,8 +66,9 @@ public class EventEndpoint implements EventsApi {
 
                 userTmp = new User(eventDTO.getUserAppId(), appTmp);
                 userRepository.save(userTmp);
+                appTmp.getUserList().add(userTmp);
                 
-                // Add all progression to the new user.
+                /* // Add all progression to the new user.
                 for(Rule rule :appTmp.getRuleList()){
                     if(rule.getPointScale() != null){
                         //userTmp.getListProgression().add(new Progression(rule.getPointScale(), userTmp));
@@ -75,7 +77,7 @@ public class EventEndpoint implements EventsApi {
                         progressionRepository.save(progressionTmp);
                         userTmp.getListProgression().add(progressionTmp);
                     }
-                }
+                }*/
             }
 
             // Creation of the the new event.
@@ -84,9 +86,10 @@ public class EventEndpoint implements EventsApi {
                                        appTmp,
                                        eventDTO.getEventType());
             
-        
             // Add the new event to the DB.
             eventRepository.save(eventTmp);
+            appTmp.getEventList().add(eventTmp);
+            
             
             EventsProcessor rulesApplication = new EventsProcessor(userRepository, applicationRepository, awardRepository, pointScaleRepository, progressionRepository);
             eventsProcessor.application(userTmp.getId(), eventDTO.getEventType(), appTmp.getId());
@@ -97,6 +100,6 @@ public class EventEndpoint implements EventsApi {
 
             return ResponseEntity.created(location).build();
         }
-        return ResponseEntity.created(null).build();
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     } 
 }

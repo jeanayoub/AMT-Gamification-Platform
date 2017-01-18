@@ -41,6 +41,12 @@ paths:
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
   /badges:
     get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
       responses:
         200:
           description:  List all badges
@@ -75,6 +81,11 @@ paths:
           format: int64
           description: ID of the badge
           required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
       responses:
         200:
           description: Sends the badge with badge Id
@@ -93,6 +104,11 @@ paths:
           format: int64
           description: id of the badge to modify
           required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true 
         - name: badge
           in: body
           description: The new values for an existing badge
@@ -116,6 +132,11 @@ paths:
           type: integer
           format: int64
           description: ID of the badge to delete
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
           required: true
       responses:
         200:
@@ -294,6 +315,12 @@ paths:
           description: Make a new pointScale
   
     get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
       responses:
         200:
           description:  PointScale list
@@ -311,6 +338,11 @@ paths:
           type: integer
           format: int64
           description: id of the pointScale
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
           required: true
       responses:
         200:
@@ -360,6 +392,11 @@ paths:
           format: int64
           description: id of the pointScale to delete
           required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
       responses:
         200:
           description: PointScale deleted successfully
@@ -367,7 +404,7 @@ paths:
           description: PointScale not found
           
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# rule
+# rules
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-            
   /rules:
     post:
@@ -387,6 +424,12 @@ paths:
           description: Rule created successfully
   
     get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
       responses:
         200:
           description:  List all rules
@@ -404,6 +447,11 @@ paths:
           type: integer
           format: int64
           description: id of the rule
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
           required: true
       responses:
         200:
@@ -423,6 +471,11 @@ paths:
           type: integer
           format: int64
           description: id of the rule to modify
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
           required: true
         - name: ruleDTO
           in: body
@@ -448,6 +501,11 @@ paths:
           type: integer
           format: int64
           description: id of the rule to delete
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
           required: true
       responses:
         200:
