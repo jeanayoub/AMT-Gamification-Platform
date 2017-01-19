@@ -122,6 +122,11 @@ public class RuleEndPoint implements RulesApi {
                 //TODO do this
                 //tmpRule.setPointScale(ruleDTO.getPointScale);
                 //tmpRule.setBadge(ruleDTO.getBage);
+                PointScale tmpPS = pointScaleRepository.findOne(ruleDTO.getAwardPointScaleId());
+                tmpRule.setPointScale(tmpPS);
+
+                Badge tmpBadge = badgesRepository.findOne(ruleDTO.getAwardBadgeId());
+                tmpRule.setBadge(tmpBadge);
 
                 ruleDTO.getAwardBadgeId();
                 ruleDTO.getAwardPointScaleId();

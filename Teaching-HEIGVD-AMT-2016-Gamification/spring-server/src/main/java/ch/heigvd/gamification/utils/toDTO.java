@@ -3,9 +3,11 @@ package ch.heigvd.gamification.utils;
 import ch.heigvd.gamification.api.dto.ApplicationGet;
 import ch.heigvd.gamification.api.dto.BadgeGet;
 import ch.heigvd.gamification.api.dto.EventGet;
+import ch.heigvd.gamification.api.dto.UserGet;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Badge;
 import ch.heigvd.gamification.model.Event;
+import ch.heigvd.gamification.model.User;
 
 import java.util.LinkedList;
 
@@ -23,6 +25,13 @@ public class toDTO {
         eventGet.setUserId(event.getUser().getId());
 
         return eventGet;
+    }
+
+    public static UserGet userToDTO(User user)
+    {
+        UserGet userGetTmp = new UserGet();
+
+        return  null;
     }
 
     public static ApplicationGet applicationtoDTO(Application application){
