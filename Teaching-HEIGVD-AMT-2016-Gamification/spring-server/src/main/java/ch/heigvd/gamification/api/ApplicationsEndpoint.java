@@ -78,7 +78,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         if(applicationRepository.exists(id)){
             return ResponseEntity.ok().body(toDTO.applicationtoDTO(applicationRepository.findOne(id)));
         }
-        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("test");
     }
     
     @Override
