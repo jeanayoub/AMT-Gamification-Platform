@@ -11,9 +11,12 @@ import javax.persistence.Entity;
 @Entity
 public class PointAward extends Award{
 
-     
     private Long awardedPoint;
     private Date date;
+
+    public PointAward(){
+    
+    }
 
     public PointAward(Date date){
         super();
@@ -26,5 +29,9 @@ public class PointAward extends Award{
 
     public void setAwardedPoint(Long awardedPoint) {
         this.awardedPoint = awardedPoint;
+    }
+    
+    public Date getDate() {
+        return date;
     }
 }

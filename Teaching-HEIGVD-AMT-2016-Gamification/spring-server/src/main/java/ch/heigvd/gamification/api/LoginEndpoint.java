@@ -35,8 +35,8 @@ public class LoginEndpoint implements LoginApi{
         
         if(appTmp != null){
             if(appTmp.getPassword().equalsIgnoreCase(loginInfo.getPassword())){
-
-                loginGet.setToken(appTmp.getName());
+                
+                loginGet.setToken(appTmp.getName()); 
                 return ResponseEntity.ok().body(loginGet);
             }
             

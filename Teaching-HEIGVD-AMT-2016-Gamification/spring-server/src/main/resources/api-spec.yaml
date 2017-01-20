@@ -164,6 +164,22 @@ paths:
             type: array
             items:
               $ref: '#/definitions/UserGet'
+  /users/awards:
+    get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description:  List all users and their award
+          schema:
+            title: users
+            type: array
+            items:
+              $ref: '#/definitions/UserAwardGet'
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # application
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-          
@@ -584,29 +600,6 @@ definitions:
         items:
           type: integer
           format: int64
-  
-  ruleTest:
-    type: object
-    properties:
-      conditions:
-        type: object
-        properties:
-          onEventType:
-            type: string
-          additionalProperties:
-            type: string
-      actions:
-        type: object
-        properties:
-          awardBadgeId:
-            type: integer
-            format: int64
-          awardPoints:
-            type: integer
-            format: int64
-          awardPointScaleId:
-            type: integer
-            format: int64
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # pointScale
@@ -640,6 +633,23 @@ definitions:
       id:
         type: integer
         format: int64
+  UserAwardGet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      awardList:
+        type: array
+        items:
+          type: object
+          properties:
+            awardType:
+              type: string
+            awardLocation:
+              type: string
+            awardDate:
+              type: string
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # event
@@ -671,17 +681,6 @@ definitions:
         type: array
         items:
           type: string
-          
-  EventTest:
-    type: object
-    properties:
-      eventType:
-        type: string
-      userAppId:
-        type: integer
-        format: int64  
-    additionalProperties:
-      type: string
       
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # Login

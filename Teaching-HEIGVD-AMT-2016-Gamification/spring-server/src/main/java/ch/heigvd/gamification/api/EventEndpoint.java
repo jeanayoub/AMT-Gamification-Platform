@@ -9,8 +9,6 @@ import ch.heigvd.gamification.services.EventsProcessor;
 import ch.heigvd.gamification.api.dto.EventPost;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.Event;
-import ch.heigvd.gamification.model.Progression;
-import ch.heigvd.gamification.model.Rule;
 import ch.heigvd.gamification.model.User;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import ch.heigvd.gamification.dao.ApplicationsRepository;
 import ch.heigvd.gamification.dao.AwardsRepository;
 import ch.heigvd.gamification.dao.EventsRepository;
 import ch.heigvd.gamification.dao.PointScalesRepository;
-import ch.heigvd.gamification.dao.ProgressionsRepository;
 import ch.heigvd.gamification.dao.UsersRepository;
 import org.springframework.http.HttpStatus;
 
@@ -39,17 +36,15 @@ public class EventEndpoint implements EventsApi {
     UsersRepository userRepository;
     AwardsRepository awardRepository;
     PointScalesRepository pointScaleRepository;
-    ProgressionsRepository progressionRepository;
     
     
     @Autowired
-    EventEndpoint(EventsRepository eventRepository, ApplicationsRepository applicationRepository, UsersRepository userRepository, AwardsRepository awardRepository,PointScalesRepository pointScaleRepository, ProgressionsRepository progressionRepository, EventsProcessor eventsProcessor) {
+    EventEndpoint(EventsRepository eventRepository, ApplicationsRepository applicationRepository, UsersRepository userRepository, AwardsRepository awardRepository,PointScalesRepository pointScaleRepository, EventsProcessor eventsProcessor) {
             this.applicationRepository = applicationRepository;
             this.eventRepository = eventRepository;
             this.userRepository = userRepository;
             this.awardRepository = awardRepository;
             this.pointScaleRepository = pointScaleRepository;
-            this.progressionRepository = progressionRepository;
             this.eventsProcessor = eventsProcessor;
     }
 
@@ -59,25 +54,13 @@ public class EventEndpoint implements EventsApi {
         
         
         Application appTmp = applicationRepository.findByName(token);
-        // du caca à changer
         if(appTmp != null){
             User userTmp = appTmp.findUserByAppId(eventDTO.getUserAppId());
             if(userTmp == null){
 
                 userTmp = new User(eventDTO.getUserAppId(), appTmp);
                 userRepository.save(userTmp);
-                appTmp.getUserList().add(userTmp);
-                
-                /* // Add all progression to the new user.
-                for(Rule rule :appTmp.getRuleList()){
-                    if(rule.getPointScale() != null){
-                        //userTmp.getListProgression().add(new Progression(rule.getPointScale(), userTmp));
-                        Progression progressionTmp = new Progression(rule.getPointScale(), userTmp);
-                        
-                        progressionRepository.save(progressionTmp);
-                        userTmp.getListProgression().add(progressionTmp);
-                    }
-                }*/
+                appTmp.getUserList().add(userTmp); 
             }
 
             // Creation of the the new event.
@@ -90,8 +73,7 @@ public class EventEndpoint implements EventsApi {
             eventRepository.save(eventTmp);
             appTmp.getEventList().add(eventTmp);
             
-            
-            EventsProcessor rulesApplication = new EventsProcessor(userRepository, applicationRepository, awardRepository, pointScaleRepository, progressionRepository);
+            EventsProcessor rulesApplication = new EventsProcessor(userRepository, applicationRepository, awardRepository, pointScaleRepository);
             eventsProcessor.application(userTmp.getId(), eventDTO.getEventType(), appTmp.getId());
            
             URI location = ServletUriComponentsBuilder

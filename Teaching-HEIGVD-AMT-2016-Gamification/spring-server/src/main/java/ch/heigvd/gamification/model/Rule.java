@@ -28,10 +28,7 @@ public class Rule {
     
     @ManyToOne
     private Badge badge;
-    
-    @OneToMany(mappedBy = "rule")
-    private List<RuleCondition> listCondition;
-    
+
     private String typeEvent;
     private Long point;
     
@@ -45,19 +42,9 @@ public class Rule {
         this.pointScale = pointScale;
         this.badge = badge;
         this.typeEvent = typeEvent;
-        this.point = point;
-       // this.listCondition = listCondition;
-       
+        this.point = point;       
     }
 
-    public void setListCondition(List<RuleCondition> listCondition) {
-        this.listCondition = listCondition;
-    }
-    
-    public List<RuleCondition> getListCondition() {
-        return listCondition;
-    }
-    
     public Long getId() {
         return id;
     }

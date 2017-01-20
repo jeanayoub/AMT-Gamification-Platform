@@ -11,15 +11,21 @@ import javax.persistence.Entity;
 @Entity
 public class BadgeAward extends Award{
 
-    public Date getTimeStamp() {
-        return date;
-    }
     
-    private final Date date;
+    
+    private Date date;
+    
+    public BadgeAward(){
+        
+    }
     
     public BadgeAward(Date date){
         super();
         this.date = date;
+    }
+    
+    public Date getDate() {
+        return date;
     }
     
 }

@@ -1,12 +1,13 @@
 package ch.heigvd.gamification.api;
 
 
+import ch.heigvd.gamification.api.dto.UserAwardGet;
 import ch.heigvd.gamification.api.dto.UserGet;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
 import ch.heigvd.gamification.dao.UsersRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.User;
-import ch.heigvd.gamification.utils.toDTO;
+import ch.heigvd.gamification.utils.ToDTO;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Created by oem on 18.01.17.
- */
+@RestController
 public class UsersEndpoint implements UsersApi{
 
     UsersRepository userRepository;
@@ -34,15 +34,40 @@ public class UsersEndpoint implements UsersApi{
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity<List<UserGet>> usersGet(@RequestHeader String token) {
+        
         Application appTmp = applicationsRepository.findByName(token);
-        if(appTmp == null) {
+        
+        System.out.println(appTmp);
+        
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null) {
+            
             LinkedList<User> listTmp = userRepository.findByApplicationId(appTmp.getId());
-            LinkedList<UserGet> listTmpDtoGet = new LinkedList<UserGet>();
+            LinkedList<UserGet> listTmpDtoGet = new LinkedList<>();
 
             for(User user : listTmp){
-                listTmpDtoGet.add(toDTO.userToDTO(user));
+                listTmpDtoGet.add(ToDTO.userToDTO(user));
             }
 
+            return ResponseEntity.ok().body(listTmpDtoGet);
+        }
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+    }
+
+    @Override
+    @RequestMapping(value = "/users/awards", method = RequestMethod.GET)
+    public ResponseEntity<List<UserAwardGet>> usersAwardsGet(@RequestHeader String token) {
+        
+        Application appTmp = applicationsRepository.findByName(token);
+        // If we didn't we find the application we cannot create the badge.
+        if(appTmp != null) {
+            
+            LinkedList<User> listTmp = userRepository.findByApplicationId(appTmp.getId());
+            LinkedList<UserAwardGet> listTmpDtoGet = new LinkedList<>();
+
+            for(User user : listTmp){
+                listTmpDtoGet.add(ToDTO.UserAwardToDTO(user));
+            }
             return ResponseEntity.ok().body(listTmpDtoGet);
         }
         return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);

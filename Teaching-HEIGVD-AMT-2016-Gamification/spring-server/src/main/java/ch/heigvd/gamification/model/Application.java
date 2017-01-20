@@ -49,7 +49,6 @@ public class Application {
         
     }
 
-
     public void setPointScaleList(List<PointScale> pointScaleList) {
         this.pointScaleList = pointScaleList;
     }

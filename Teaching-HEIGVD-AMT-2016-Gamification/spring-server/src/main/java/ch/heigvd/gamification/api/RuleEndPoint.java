@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
 import ch.heigvd.gamification.dao.PointScalesRepository;
-import ch.heigvd.gamification.dao.RuleConditionsRepository;
 import ch.heigvd.gamification.dao.RulesRepository;
 
 @RestController
@@ -34,11 +33,9 @@ public class RuleEndPoint implements RulesApi {
     ApplicationsRepository applicationsRepository;
     BadgesRepository badgesRepository;
     PointScalesRepository pointScaleRepository;
-    RuleConditionsRepository conditionsRepository;
-
     @Autowired
-    RuleEndPoint(RuleConditionsRepository conditionRepository, RulesRepository ruleRepository, ApplicationsRepository applicationRepository, BadgesRepository badgesRepository, PointScalesRepository pointScaleRepository) {
-        this.conditionsRepository = conditionRepository;
+    RuleEndPoint(RulesRepository ruleRepository, ApplicationsRepository applicationRepository, BadgesRepository badgesRepository, PointScalesRepository pointScaleRepository) {
+
         this.rulesRepository = ruleRepository;
         this.applicationsRepository = applicationRepository;
         this.badgesRepository = badgesRepository;

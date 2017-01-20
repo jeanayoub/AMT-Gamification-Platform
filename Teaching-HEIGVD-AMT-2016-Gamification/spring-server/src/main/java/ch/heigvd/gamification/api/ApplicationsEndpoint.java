@@ -1,14 +1,11 @@
 package ch.heigvd.gamification.api;
 
 
-import ch.heigvd.gamification.api.ApplicationsApi;
 import ch.heigvd.gamification.api.dto.ApplicationEventGet;
 import ch.heigvd.gamification.api.dto.ApplicationGet;
 import ch.heigvd.gamification.api.dto.ApplicationPost;
-import ch.heigvd.gamification.api.dto.EventGet;
 import ch.heigvd.gamification.dao.BadgesRepository;
 import ch.heigvd.gamification.model.Application;
-import ch.heigvd.gamification.model.Badge;
 import ch.heigvd.gamification.model.Event;
 import java.net.URI;
 import java.util.ArrayList;
@@ -25,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
-import ch.heigvd.gamification.utils.toDTO;
+import ch.heigvd.gamification.utils.ToDTO;
 
 
 @RestController
@@ -45,10 +42,11 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     @RequestMapping(value = "/applications", method = RequestMethod.POST)
     public ResponseEntity<Void> applicationsPost(@RequestBody ApplicationPost application) {
         
+        // Create the new application
         Application appliToCreate = new Application(application.getName(),
                                                     application.getPassword(),
                                                     application.getDescription());
-        
+        // Save the application into the DB
         applicationRepository.save(appliToCreate);
         
         URI location = ServletUriComponentsBuilder
@@ -62,11 +60,14 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     @RequestMapping(value = "/applications", method = RequestMethod.GET)
     public ResponseEntity<List<ApplicationGet>> applicationsGet() {
      
+        // Return all the applications
         LinkedList<Application> listTmp = applicationRepository.findAll();
         LinkedList<ApplicationGet> listTmpDtoGet = new LinkedList<ApplicationGet>();
         
+        
+        // Transform the applications to DTO.
         for(Application application : listTmp){
-            listTmpDtoGet.add(toDTO.applicationtoDTO(application));
+            listTmpDtoGet.add(ToDTO.applicationtoDTO(application));
         }
         return ResponseEntity.ok().body(listTmpDtoGet);
     }
@@ -75,8 +76,9 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     @RequestMapping(value = "/applications/{id}", method = RequestMethod.GET) 
     public ResponseEntity<Object> applicationsIdGet(@PathVariable Long id) {
     
+        // If it exist return the application choosed by the ID.
         if(applicationRepository.exists(id)){
-            return ResponseEntity.ok().body(toDTO.applicationtoDTO(applicationRepository.findOne(id)));
+            return ResponseEntity.ok().body(ToDTO.applicationtoDTO(applicationRepository.findOne(id)));
         }
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body("test");
     }
@@ -127,7 +129,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
     public ResponseEntity<Object> applicationsIdBadgesIdBadgeGet(@PathVariable Long id, @PathVariable Long idBadge) {
         
         if(Objects.equals(badgesRepository.findOne(idBadge).getApplication().getId(), id)){
-            return ResponseEntity.ok().body(toDTO.badgetoDTO((badgesRepository.findOne(idBadge))));
+            return ResponseEntity.ok().body(ToDTO.badgetoDTO((badgesRepository.findOne(idBadge))));
         }
         return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -138,7 +140,7 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         List<Object> eventList = new ArrayList<>();
         
         for(Event event : application.getEventList()){
-            eventList.add(toDTO.eventToDTO(event));
+            eventList.add(ToDTO.eventToDTO(event));
         }
         
         ApplicationEventGet applicationEventGet = new ApplicationEventGet();
@@ -146,5 +148,4 @@ public class ApplicationsEndpoint implements ApplicationsApi {
         return applicationEventGet;    
         
     }
-
 }

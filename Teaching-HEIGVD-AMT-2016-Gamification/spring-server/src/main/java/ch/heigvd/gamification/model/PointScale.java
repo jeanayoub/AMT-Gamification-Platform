@@ -35,9 +35,6 @@ public class PointScale {
 
     @OneToMany(mappedBy = "pointScale")
     private List<Award> listAward = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "pointScale")
-    private List<Progression> listProgression = new ArrayList<>();
 
     @ManyToOne
     private Application application;

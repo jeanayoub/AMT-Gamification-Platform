@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
-import ch.heigvd.gamification.utils.toDTO;
+import ch.heigvd.gamification.utils.ToDTO;
 
 /**
  *
@@ -49,12 +49,13 @@ public class BadgesEndpoint implements BadgesApi {
         Application appTmp = applicationsRepository.findByName(token);
         // If we didn't we find the application we cannot create the badge.
         if(appTmp != null){
-            
+            // Return all the badge found for an application.
             LinkedList<Badge> listTmp = badgesRepository.findByApplicationId(appTmp.getId());
             LinkedList<BadgeGet> listTmpDtoGet = new LinkedList<BadgeGet>();
 
+            // transform all the badges to DTO.
             for(Badge badge : listTmp){
-                listTmpDtoGet.add(toDTO.badgetoDTO(badge));
+                listTmpDtoGet.add(ToDTO.badgetoDTO(badge));
             }
 
             return ResponseEntity.ok().body(listTmpDtoGet);
@@ -70,15 +71,12 @@ public class BadgesEndpoint implements BadgesApi {
         // If we didn't we find the application we cannot create the badge.
         if(appTmp != null){
             if(badgesRepository.exists(id)){
-                
-               // System.out.println("-------------------------------");
-               // System.out.println(badgesRepository.findByBadgeIdApplicationId(id,id));
-                return ResponseEntity.ok().body(toDTO.badgetoDTO(badgesRepository.findOne(id)));
+                // If it exist, return the badge defined by the the ID
+                return ResponseEntity.ok().body(ToDTO.badgetoDTO(badgesRepository.findOne(id)));
             }
             return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
-        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-       
+        return  ResponseEntity.status(HttpStatus.FORBIDDEN).body("Wrong login"); 
     }
 
     @Override
@@ -89,13 +87,14 @@ public class BadgesEndpoint implements BadgesApi {
         Application appTmp = applicationsRepository.findByName(token);
         // If we didn't we find the application we cannot create the badge.
         if(appTmp != null){
+            // Create the new badge
             Badge badgeToCreate = new Badge( badge.getName(),
                                         badge.getDescription(),
                                         badge.getIcon(),
                                         appTmp);
-        
+            // Add the new badge to the DB
             badgesRepository.save(badgeToCreate);
-            
+            // Add the badge to the app.
             appTmp.getBadgesList().add(badgeToCreate);
         
             URI location = ServletUriComponentsBuilder
@@ -114,6 +113,7 @@ public class BadgesEndpoint implements BadgesApi {
         Application appTmp = applicationsRepository.findByName(token);
         // If we didn't we find the application we cannot create the badge.
         if(appTmp != null){
+            // If the badge exist we delete it.
             if(badgesRepository.exists(id)){
                 badgesRepository.delete(id);
                 return ResponseEntity.ok().body(null);
@@ -131,13 +131,14 @@ public class BadgesEndpoint implements BadgesApi {
         // If we didn't we find the application we cannot create the badge.
         if(appTmp != null){
             if(badgesRepository.exists(id)){
-
+                
+                // Get the badge in the DB if it exist.
                 Badge existingBadge = badgesRepository.findOne(id);
-                                
+                // Modifie these values.                
                 existingBadge.setIcon(badge.getIcon());
                 existingBadge.setDescription(badge.getDescription());
                 existingBadge.setName(badge.getName());
-                
+                // Save de modification in the DB
                 badgesRepository.save(existingBadge);
 
                 URI location = ServletUriComponentsBuilder

@@ -31,8 +31,6 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Award> listAward = new ArrayList<>();
     
-    @OneToMany(mappedBy = "user")
-    private List<Progression> listProgression = new ArrayList<>();
 
     public User(){
     
@@ -78,10 +76,6 @@ public class User {
 
     public void setListAward(List<Award> listAward) {
         this.listAward = listAward;
-    }
-    
-    public List<Progression> getListProgression() {
-        return listProgression;
     }
 }
 
