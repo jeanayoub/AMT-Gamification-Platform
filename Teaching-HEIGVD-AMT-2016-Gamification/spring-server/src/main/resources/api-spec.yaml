@@ -240,7 +240,7 @@ paths:
             $ref: '#/definitions/ApplicationPost'
           required: true
       responses:
-        200:
+        201:
           description: Sends the modified application id
           schema:
             title: Applications
