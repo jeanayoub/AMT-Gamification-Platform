@@ -48,6 +48,7 @@ public class EventEndpoint implements EventsApi {
             this.eventsProcessor = eventsProcessor;
     }
 
+    
     @Override
     @RequestMapping(value = "/events", method = RequestMethod.POST)
     public ResponseEntity<Void> eventsPost(@RequestBody EventPost eventDTO, @RequestHeader String token) {
