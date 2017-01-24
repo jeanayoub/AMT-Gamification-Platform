@@ -1,6 +1,10 @@
 # some comment
 # language: en
+
 Feature: Application registration
+
+  Background:
+   Given I have an application payload 
 
   Scenario: Post a new application
    Given I have an application payload
@@ -17,4 +21,4 @@ Feature: Application registration
    Given I have an application payload
    When I POST it to the /applications endpoint
    And I POST it to the /applications endpoint
-   Then I receive a 422 status code
+   Then I receive a 409 status code

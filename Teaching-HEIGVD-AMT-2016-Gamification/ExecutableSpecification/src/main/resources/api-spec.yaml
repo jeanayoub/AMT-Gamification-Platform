@@ -12,29 +12,93 @@ schemes:
 paths:
   /applications:
     get:
-      produces:
-        - application/json
       responses:
         200:
-          description:  List all registered applications
+          description: List all applications
           schema:
-            title: Registration summary
+            title: Applications
             type: array
             items:
               $ref: '#/definitions/ApplicationGet'
+        404:
+          description: Application not found
     post:
-      consumes:
-        - application/json
       parameters:
-        - name: body
+        - name: application
           in: body
-          description: The info required to register an application
+          description: The info required to create an application
           schema:
             $ref: '#/definitions/ApplicationPost'
           required: true
       responses:
         201:
-          description: Register a new application
+          description: Make a new applicationon
+        409:
+          description: Applications conflict
+          
+          
+  /applications/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the application
+          required: true
+      responses:
+        200:
+          description: Sends the application with application id
+          schema:
+            title: Applications
+            type: object
+            items:
+              $ref: '#/definitions/ApplicationGet'
+            
+        404:
+          description: Application not found
+          
+    put:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the application to modify
+          required: true
+        - name: application
+          in: body
+          description: The new values for an existing application
+          schema:
+            $ref: '#/definitions/ApplicationPost'
+          required: true
+      responses:
+        200:
+          description: Sends the modified application id
+          schema:
+            title: Applications
+            type: object
+            items:
+              $ref: '#/definitions/ApplicationGet'
+        404:
+          description: Application not found
+        
+    delete:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the application to delete
+          required: true
+      responses:
+        200:
+          description: Delete the application with badge id
+        404:
+          description: Application not foundßßßßß
+   
+          
+          
   /auth:
     post:
       operationId: authenticateApplicationAndGetToken
@@ -95,6 +159,7 @@ paths:
               The platform has accepted the event and will process it (asynchronously)
           schema:
             $ref: '#/definitions/Event'   
+
 definitions: 
   RegistrationSummary:
     type: object
@@ -111,6 +176,9 @@ definitions:
         type: string
       description:
         type: string
+      id:
+        type: integer
+        format: int64
         
         
   ApplicationGet:
