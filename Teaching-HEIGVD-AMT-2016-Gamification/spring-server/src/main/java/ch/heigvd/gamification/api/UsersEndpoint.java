@@ -8,7 +8,6 @@ import ch.heigvd.gamification.dao.UsersRepository;
 import ch.heigvd.gamification.model.Application;
 import ch.heigvd.gamification.model.User;
 import ch.heigvd.gamification.utils.ToDTO;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

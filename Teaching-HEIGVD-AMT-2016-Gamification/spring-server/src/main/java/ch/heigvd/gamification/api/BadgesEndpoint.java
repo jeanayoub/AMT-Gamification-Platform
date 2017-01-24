@@ -145,7 +145,7 @@ public class BadgesEndpoint implements BadgesApi {
                                 .fromCurrentRequest().path("/{id}")
                                 .buildAndExpand(id).toUri();
 
-                return ResponseEntity.ok(location);
+                return ResponseEntity.status(HttpStatus.OK).body(location);
             }
             return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

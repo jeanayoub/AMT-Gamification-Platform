@@ -100,7 +100,7 @@ public class PointScaleEndPoint implements PointScalesApi{
                         .fromCurrentRequest().path("/{id}")
                         .buildAndExpand(id).toUri();
 
-                return ResponseEntity.ok(location);
+                return ResponseEntity.status(HttpStatus.OK).body(location);
             }
             return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }

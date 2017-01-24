@@ -131,7 +131,7 @@ public class RuleEndPoint implements RulesApi {
                         .fromCurrentRequest().path("/{id}")
                         .buildAndExpand(id).toUri();
 
-                return ResponseEntity.ok(location);
+                return ResponseEntity.status(HttpStatus.OK).body(location);
             }
             return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }

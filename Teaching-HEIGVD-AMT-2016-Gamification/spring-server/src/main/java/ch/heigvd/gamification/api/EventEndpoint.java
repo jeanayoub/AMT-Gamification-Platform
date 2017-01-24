@@ -51,8 +51,7 @@ public class EventEndpoint implements EventsApi {
     @Override
     @RequestMapping(value = "/events", method = RequestMethod.POST)
     public ResponseEntity<Void> eventsPost(@RequestBody EventPost eventDTO, @RequestHeader String token) {
-        
-        
+               
         Application appTmp = applicationRepository.findByName(token);
         if(appTmp != null){
             User userTmp = appTmp.findUserByAppId(eventDTO.getUserAppId());
