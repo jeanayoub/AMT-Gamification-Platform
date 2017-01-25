@@ -1,4 +1,4 @@
-# some comment
+# GamificationAPI Test
 # language: en
 
 Feature: Badge registration

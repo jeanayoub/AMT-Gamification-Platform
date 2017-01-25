@@ -11,9 +11,10 @@ import ch.heigvd.gamification.api.dto.LoginPost;
 import ch.heigvd.gamification.api.dto.EventPost;
 import ch.heigvd.gamification.api.dto.PointScalePost;
 import ch.heigvd.gamification.api.dto.PointScaleGet;
+import ch.heigvd.gamification.api.dto.RulePost;
+import ch.heigvd.gamification.api.dto.RuleGet;
 import ch.heigvd.gamification.api.dto.RegistrationSummary;
 import com.google.gson.internal.LinkedTreeMap;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -28,30 +29,41 @@ import static org.assertj.core.api.Assertions.*;
  */
 public class ApplicationSteps {
 
-    private final DefaultApi api = new DefaultApi();
-    private int applicationsCounter = 1;
-    private int badgesCounter = 1;
-    private int statusCode;
-    private ApplicationGet applicationGet;
-    private ApplicationPost applicationPost = new ApplicationPost();
-    private BadgePost badgePost = new BadgePost();
-    private BadgeGet badgeGet = new BadgeGet();
-    private LoginPost loginPost = new LoginPost();
-    private EventPost eventPost = new EventPost();
-    private PointScalePost pointScalePost = new PointScalePost();
-    private List<ApplicationGet> applications;
-    private List<BadgeGet> badges;
-    private List<PointScaleGet> pointScales;
-    private ApiResponse response = null;
-    private Long id = null;
-    private Long idBadge = null;
-    private Long idPointScale = null;
-    private String token = null;
-        
+    private final DefaultApi  api      = new DefaultApi();
+    private       ApiResponse response = null;
+  
     
-/***************************************************************************
-* General
-**************************************************************************/
+    private int applicationsCounter = 1;
+    private int badgesCounter       = 1;
+    
+    
+    private ApplicationGet  applicationGet  = new ApplicationGet();
+    private ApplicationPost applicationPost = new ApplicationPost();
+    private BadgePost       badgePost       = new BadgePost();
+    private BadgeGet        badgeGet        = new BadgeGet();
+    private LoginPost       loginPost       = new LoginPost();
+    private EventPost       eventPost       = new EventPost();
+    private PointScalePost  pointScalePost  = new PointScalePost();
+    private RulePost        rulePost        = new RulePost();
+    private RuleGet         ruleGet         = new RuleGet();
+    
+    private List<ApplicationGet> applications;
+    private List<BadgeGet>       badges;
+    private List<PointScaleGet>  pointScales;
+    private List<RuleGet>        rules;
+    
+    private Long   id           = null;
+    private Long   idBadge      = null;
+    private Long   idPointScale = null;
+    private Long   idRule       = null;
+    private String token        = null;
+    private int    statusCode;    
+    
+    
+    
+/*******************************************************************************
+* Application
+*******************************************************************************/
     
     @Then("^I receive a (\\d+) status code$")
     public void i_receive_a_status_code(int arg1) throws Throwable {
@@ -80,36 +92,11 @@ public class ApplicationSteps {
         applicationPost.setName(randomApplicationName);
         applicationPost.setPassword("pass");
         
-        try {
-            response = api.applicationsPostWithHttpInfo(applicationPost);
-            statusCode = response.getStatusCode();
-            Map map = (Map)response.getHeaders();
-            String s = map.values().toString();
-            s = s.substring(41);
-            String [] list = s.split("]");
-            id = Long.valueOf(list[0]);
-            //System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew: " + statusCode);
-        } catch (ApiException e) {
-            statusCode = e.getCode();
-            System.err.println(e.getCode());
-        }
+        i_POST_it_to_the_applications_endpoint();
+        
         assertEquals(201, statusCode);
     }
-    
-/***************************************************************************
-**************************************************************************/
-    
-    
-    
-    
 
-   
-
-
-    
-/***************************************************************************
-* applicationRegistration
-**************************************************************************/
     
     @Given("^I have an application payload$")
     public void i_have_an_application_payload() throws Throwable {
@@ -123,11 +110,11 @@ public class ApplicationSteps {
         try {
             response = api.applicationsPostWithHttpInfo(applicationPost);
             statusCode = response.getStatusCode();
-            Map map = (Map)response.getHeaders();
-            String s = map.values().toString();
-            s = s.substring(41);
-            String [] list = s.split("]");
-            id = Long.valueOf(list[0]);
+            
+            Map<String,List<String>> map = response.getHeaders();
+            String s = map.get("Location").get(0);
+            String [] list = s.split("/");
+            id = Long.valueOf(list[list.length - 1]);
         } catch (ApiException e) {
             statusCode = e.getCode();
             System.err.println(e.getCode());
@@ -141,19 +128,8 @@ public class ApplicationSteps {
         expected.setApplicationName(applicationPost.getName());
         assertThat(applications).extracting("name").contains(applicationPost.getName());
     }
-/***************************************************************************
-**************************************************************************/
-    
-    
-    
-    
-    
-    
-    
 
-/***************************************************************************
-* applicationModification
-**************************************************************************/
+    
      @Given("^I have an application with a specific payload$")
      public void i_have_an_application_with_a_specific_payload() throws Throwable {
         applicationPost.setName("PutTest");
@@ -195,22 +171,7 @@ public class ApplicationSteps {
         assertEquals("PutTest_Description_Success", description);
     }
     
-/***************************************************************************
-**************************************************************************/
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-/***************************************************************************
-* applicationDeletion
-**************************************************************************/
-       
+
     @When("^I DELETE it using /applications/id endpoint$")
     public void i_DELETE_it_using_applications_id_endpoint() throws Throwable {
         try {
@@ -226,18 +187,8 @@ public class ApplicationSteps {
     public void i_have_a_nonexistent_application_id_like(int arg1) throws Throwable {
         id = new Long(arg1);
     }  
-/***************************************************************************
-**************************************************************************/
-    
-    
 
     
-    
-    
-    
-/***************************************************************************
-* applicationReading
-**************************************************************************/
     
      @When("^I ask for the application with a GET on the /applications/id endpoint$")
     public void I_ask_for_the_application_with_a_GET_on_the_applications_id_endpoint() 
@@ -262,16 +213,7 @@ public class ApplicationSteps {
         }
     }
     
-/***************************************************************************
-**************************************************************************/ 
-    
-    
-    
-    
-    
-/***************************************************************************
-* applicationBadgeReading
-**************************************************************************/
+
     @Given("^I have an application with an id and a related badge with an idBadge$")
     public void i_have_an_application_with_an_id_and_a_related_badge_with_an_idBadge() throws Throwable {
         i_have_a_badge_payload_and_a_token();
@@ -292,8 +234,21 @@ public class ApplicationSteps {
         }
     }
 
-/***************************************************************************
-**************************************************************************/ 
+
+    
+    @When("^I ask for the events using /applications/id/events endpoint$")
+    public void i_ask_for_the_events_using_applications_id_events_endpoint() throws Throwable {
+        try {
+           response = api.applicationsIdEventsGetWithHttpInfo(id);
+           statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+/*******************************************************************************
+*******************************************************************************/ 
     
     
     
@@ -301,13 +256,9 @@ public class ApplicationSteps {
     
     
     
-    
-    
-    
-    
-/***************************************************************************
+/*******************************************************************************
 * Badge
-**************************************************************************/    
+*******************************************************************************/    
     @Given("^I have a badge payload and a token$")
     public void i_have_a_badge_payload_and_a_token() throws Throwable {
         String randomBadgeName = "badge-" + (badgesCounter++) + "-" + System.currentTimeMillis();
@@ -402,16 +353,16 @@ public class ApplicationSteps {
         }
         assertEquals("badgeTestPut_Success", name);
     }
-/***************************************************************************
-**************************************************************************/     
+/*******************************************************************************
+*******************************************************************************/     
     
     
 
     
     
-/***************************************************************************
-* LoginPost
-**************************************************************************/
+/*******************************************************************************
+* Login
+*******************************************************************************/
 
     @When("^I POST it to the /login endpoint$")
     public void i_POST_it_to_the_login_endpoint() throws Throwable {
@@ -426,16 +377,13 @@ public class ApplicationSteps {
              LinkedTreeMap ltp = (LinkedTreeMap)api.loginPost(loginPost);
              token = (String)ltp.get("token");
    
-            // System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + s);
         } catch (ApiException e) {
             statusCode = e.getCode();
             System.err.println(e.getCause());
         }
     } 
-   
-   
-/***************************************************************************
-**************************************************************************/    
+/*******************************************************************************
+*******************************************************************************/    
     
     
     
@@ -445,7 +393,9 @@ public class ApplicationSteps {
     
     
     
-    
+/*******************************************************************************
+* Event
+*******************************************************************************/
     
     @Given("^I have an event payload with a token$")
     public void i_have_an_event_payload_with_a_token() throws Throwable {
@@ -481,7 +431,8 @@ public class ApplicationSteps {
         }
     }
     
-    
+/*******************************************************************************
+*******************************************************************************/  
 
 
 
@@ -490,15 +441,13 @@ public class ApplicationSteps {
 
 
 
-
-
-
-
-
+/*******************************************************************************
+* PointScale
+*******************************************************************************/
 
     @Given("^I have a point scale payload with a token$")
     public void i_have_a_point_scale_payload_with_a_token() throws Throwable {
-         pointScalePost.setName("point Scale");
+         pointScalePost.setName("pointScale");
         
         i_have_an_application_in_my_database_with_a_id();
         i_POST_it_to_the_login_endpoint();
@@ -509,6 +458,13 @@ public class ApplicationSteps {
         try {
             response = api.pointScalesPostWithHttpInfo(pointScalePost, token);
             statusCode = response.getStatusCode();
+            Map map = response.getHeaders();
+            String s = map.get("Location").toString();
+            s = s.substring(1, s.length()-1);
+            String [] list = s.split("/");
+            idPointScale = Long.valueOf(list[list.length - 1]);
+            
+            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew+++++++++++++++: " + idPointScale);
             
         } catch (ApiException e) {
             statusCode = e.getCode();
@@ -522,23 +478,6 @@ public class ApplicationSteps {
             response = api.pointScalesGetWithHttpInfo(token);
             pointScales = api.pointScalesGet(token);
             statusCode = response.getStatusCode();
-            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + pointScales);
-        } catch (ApiException e) {
-            statusCode = e.getCode();
-            System.err.println(e.getCause());
-        }
-    }
-
-
-    @When("^I ask for the pointScale with a GET on the /pointScales/id endpoint$")
-    public void i_ask_for_the_pointScale_with_a_GET_on_the_pointScales_id_endpoint() throws Throwable {
-        i_ask_for_the_pointScales_with_a_GET_on_the_pointScales_endpoint();
-        idPointScale = pointScales.get(0).getId();
-        System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + idPointScale);
-        
-        try {
-            response = api.pointScalesIdGetWithHttpInfo(idPointScale, token);
-            statusCode = response.getStatusCode();
             
         } catch (ApiException e) {
             statusCode = e.getCode();
@@ -546,4 +485,192 @@ public class ApplicationSteps {
         }
     }
 
+
+   
+    
+    @When("^I ask for the pointScale with a GET on the /pointScales/id endpoint$")
+    public void i_ask_for_the_pointScale_with_a_GET_on_the_pointScales_id_endpoint() throws Throwable {
+        try {
+            
+            response = api.pointScalesIdGetWithHttpInfo(idPointScale, token);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+    @When("^I DELETE it using /pointScales/id endpoint$")
+    public void i_DELETE_it_using_pointScales_id_endpoint() throws Throwable {
+        System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + token);
+            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + idPointScale);
+        try { 
+            response = api.pointScalesIdDeleteWithHttpInfo(idPointScale, token);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+    
+    @When("^I modify the payload of that PointScale$")
+    public void i_modify_the_payload_of_that_PointScale() throws Throwable {
+        pointScalePost.setName("pointScale_Success");
+    }
+    
+    @When("^I PUT it to the /pointScales/id endpoint$")
+    public void i_PUT_it_to_the_pointScales_id_endpoint() throws Throwable {
+        try {
+            response = api.pointScalesIdPutWithHttpInfo(idPointScale, pointScalePost, token);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
 }
+
+    @Then("^I see that the pointScale modifications took effect$")
+    public void i_see_that_the_pointScale_modifications_took_effect() throws Throwable {
+        String name = null;
+        try {
+            LinkedTreeMap ltp = (LinkedTreeMap) api.pointScalesIdGet(idPointScale, token);
+            name = (String)ltp.get("name");
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+        assertEquals("pointScale_Success", name);
+    }
+/*******************************************************************************
+*******************************************************************************/ 
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+/*******************************************************************************
+* Rule
+*******************************************************************************/    
+    @Given("^I have a rule payload with a token$")
+    public void i_have_a_rule_payload_with_a_token() throws Throwable {
+         
+        i_have_an_application_with_an_id_and_a_related_badge_with_an_idBadge();
+        pointScalePost.setName("pointScale");
+        i_POST_it_to_the_pointScales_endpoint();
+        
+        rulePost.setPoint(new Long(15));
+        rulePost.setAwardBadgeId(idBadge);
+        rulePost.setAwardPointScaleId(idPointScale);
+        rulePost.setEventType("Big one");
+        
+    }
+
+    @When("^I POST it to the /rules endpoint$")
+    public void i_POST_it_to_the_rules_endpoint() throws Throwable {
+        try {
+            response = api.rulesPostWithHttpInfo(rulePost, token);
+            statusCode = response.getStatusCode();
+            
+            Map map = response.getHeaders();
+            String s = map.get("Location").toString();
+            s = s.substring(1, s.length()-1);
+            String [] list = s.split("/");
+            idRule = Long.valueOf(list[list.length - 1]);
+            
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+
+
+    @When("^I ask for the rules with a GET on the /rules endpoint$")
+    public void i_ask_for_the_rules_with_a_GET_on_the_rules_endpoint() throws Throwable {
+       try {
+            response = api.rulesGetWithHttpInfo(token);
+            statusCode = response.getStatusCode();
+      
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+    @When("^I ask for the pointScale with a GET on the /rules/id endpoint$")
+    public void i_ask_for_the_pointScale_with_a_GET_on_the_rules_id_endpoint() throws Throwable {
+        try {
+            
+            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + token);
+            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + idRule);
+            response = api.rulesIdGetWithHttpInfo(idRule, token);
+            statusCode = response.getStatusCode();
+      
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+
+
+    
+    @When("^I modify the payload of that rule$")
+    public void i_modify_the_payload_of_that_rule() throws Throwable {
+        rulePost.setEventType("Dislike");
+    }
+
+    
+    @When("^I PUT it to the /rules/id endpoint$")
+    public void i_PUT_it_to_the_rules_id_endpoint() throws Throwable {
+        try {
+            response = api.rulesIdPutWithHttpInfo(idRule, token, rulePost);
+            statusCode = response.getStatusCode();
+      
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+    
+    @Then("^I see that the rule modifications took effect$")
+    public void i_see_that_the_rule_modifications_took_effect() throws Throwable {
+        String eventType = null;
+        try {
+            LinkedTreeMap ltp = (LinkedTreeMap) api.rulesIdGet(idPointScale, token);
+            eventType = (String)ltp.get("");
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+        assertEquals("Dislike", eventType);
+    }
+    
+
+    
+    @When("^I DELETE it using /rules/id endpoint$")
+    public void i_DELETE_it_using_rules_id_endpoint() throws Throwable {
+        try { 
+            response = api.rulesIdDeleteWithHttpInfo(idRule, token);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+/*******************************************************************************
+*******************************************************************************/
+
+    
+    
+    
+}
+
+
+

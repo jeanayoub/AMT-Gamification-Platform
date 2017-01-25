@@ -1,7 +1,7 @@
-# some comment
+# GamificationAPI Test
 # language: en
 
-Feature: Point Scales Registration
+Feature: PointScale Registration
 
  Background:
    Given I have a point scale payload with a token 
