@@ -24,6 +24,8 @@ import ch.heigvd.gamification.dao.AwardsRepository;
 import ch.heigvd.gamification.dao.EventsRepository;
 import ch.heigvd.gamification.dao.PointScalesRepository;
 import ch.heigvd.gamification.dao.UsersRepository;
+import javax.persistence.LockModeType;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.http.HttpStatus;
 
 @RestController
@@ -50,11 +52,13 @@ public class EventEndpoint implements EventsApi {
 
     
     @Override
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @RequestMapping(value = "/events", method = RequestMethod.POST)
     public ResponseEntity<Void> eventsPost(@RequestBody EventPost eventDTO, @RequestHeader String token) {
-               
+         
         Application appTmp = applicationRepository.findByName(token);
         if(appTmp != null){
+
             User userTmp = appTmp.findUserByAppId(eventDTO.getUserAppId());
             if(userTmp == null){
 

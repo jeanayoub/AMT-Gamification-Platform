@@ -93,11 +93,29 @@ public class RuleEndPoint implements RulesApi {
     @RequestMapping(value = "/rules/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> rulesIdGet(@PathVariable  Long id, @RequestHeader String token) {
         
+        
+        
+        
         Application appTmp = applicationsRepository.findByName(token);
         // If we didn't we find the application we cannot create the badge.
+        
         if(appTmp != null){
             if(rulesRepository.exists(id)){
-                return ResponseEntity.ok().body(rulesRepository.findOne(id));
+                Rule ruleTmp = rulesRepository.findOne(id);
+                RuleGet ruleGetTmp = new RuleGet();
+                
+                if(ruleTmp.getBadge() != null)
+                    ruleGetTmp.setAwardBadgeId(ruleTmp.getBadge().getId());
+                if(ruleTmp.getPointScale() != null){
+                    ruleGetTmp.setAwardPointScaleId(ruleTmp.getPointScale().getId());
+                    ruleGetTmp.setNumberOfPoint(ruleTmp.getPoint());
+                }
+                
+                ruleGetTmp.setApplicationId(ruleTmp.getApplication().getId());
+                ruleGetTmp.setApplicationName(ruleTmp.getApplication().getName());
+                ruleGetTmp.setEventType(ruleTmp.getTypeEvent());
+                
+                return ResponseEntity.ok().body(ruleGetTmp);
             }
             return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
