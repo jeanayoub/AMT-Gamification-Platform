@@ -54,3 +54,11 @@ docker-compose up
 
 Next you must import the application project into netBean (or ecplise but it can be tricky to make it work).
 After that you can clean and build the project and start it by doing a right click on the project and selecting "Custom -> spring-boot:run".
+
+
+## Tests
+
+To run the automated test, you have to first deploy the application (step Deployment above), then right click on the ExecutableSpecification project and choose Clean and Build. 
+After that you right click again on the same project and this time choose Test.
+
+This automated test, will simulate each available function of the endpoints.
