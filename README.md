@@ -49,7 +49,7 @@ mot de passe : adminpw
 
 To deploy the application you must start the docker container in the root directory of the application with the command :
 ```
-docker-compose up
+docker-compose up --build
 ```
 
 Next you must import the application project into netBean (or ecplise but it can be tricky to make it work).
