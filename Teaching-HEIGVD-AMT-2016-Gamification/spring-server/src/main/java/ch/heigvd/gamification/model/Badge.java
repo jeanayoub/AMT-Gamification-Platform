@@ -1,6 +1,15 @@
 /**
- *
+ * Author : Aghamahdi Mohammad Hossein
+ *          Ayoub jean
+ *          Baehler Simon
+ *          Monzione Marco
+ * 
+ * Project : AMT-Gamification-platform
+ * 
+ * Date : 25.01.2017
+ *          
  */
+
 package ch.heigvd.gamification.model;
 
 import java.util.ArrayList;
@@ -12,15 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-/**
- * This class represents a badge. Each badge has a unique Id, a name, a
- * description and an icon.
- *
- * Once set, the id can not be changed.
- *
- * @author M-H. Aghamahdi, J. Ayoub, S. Baehler, M. Monzione
- * @date 14 Nov 2016
- */
 @Entity
 public class Badge {
 

@@ -1,4 +1,4 @@
-# some comment
+# GamificationAPI Test
 # language: en
 
 Feature: Point Scales Reading

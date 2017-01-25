@@ -1,8 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Author : Aghamahdi Mohammad Hossein
+ *          Ayoub jean
+ *          Baehler Simon
+ *          Monzione Marco
+ * 
+ * Project : AMT-Gamification-platform
+ * 
+ * Date : 25.01.2017
+ *          
  */
+
 package ch.heigvd.gamification.api;
 
 import ch.heigvd.gamification.api.dto.RuleGet;
@@ -93,11 +100,29 @@ public class RuleEndPoint implements RulesApi {
     @RequestMapping(value = "/rules/{id}", method = RequestMethod.GET)
     public ResponseEntity<Object> rulesIdGet(@PathVariable  Long id, @RequestHeader String token) {
         
+        
+        
+        
         Application appTmp = applicationsRepository.findByName(token);
         // If we didn't we find the application we cannot create the badge.
+        
         if(appTmp != null){
             if(rulesRepository.exists(id)){
-                return ResponseEntity.ok().body(rulesRepository.findOne(id));
+                Rule ruleTmp = rulesRepository.findOne(id);
+                RuleGet ruleGetTmp = new RuleGet();
+                
+                if(ruleTmp.getBadge() != null)
+                    ruleGetTmp.setAwardBadgeId(ruleTmp.getBadge().getId());
+                if(ruleTmp.getPointScale() != null){
+                    ruleGetTmp.setAwardPointScaleId(ruleTmp.getPointScale().getId());
+                    ruleGetTmp.setNumberOfPoint(ruleTmp.getPoint());
+                }
+                
+                ruleGetTmp.setApplicationId(ruleTmp.getApplication().getId());
+                ruleGetTmp.setApplicationName(ruleTmp.getApplication().getName());
+                ruleGetTmp.setEventType(ruleTmp.getTypeEvent());
+                
+                return ResponseEntity.ok().body(ruleGetTmp);
             }
             return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }

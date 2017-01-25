@@ -1,3 +1,15 @@
+/**
+ * Author : Aghamahdi Mohammad Hossein
+ *          Ayoub jean
+ *          Baehler Simon
+ *          Monzione Marco
+ * 
+ * Project : AMT-Gamification-platform
+ * 
+ * Date : 25.01.2017
+ *          
+ */
+
 package ch.heigvd.gamification.utils;
 
 import ch.heigvd.gamification.api.dto.ApplicationGet;
@@ -18,11 +30,13 @@ import ch.heigvd.gamification.model.User;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by oem on 14.01.17.
- */
 public class ToDTO {
 
+    /**
+     * Convert an event to DTO used for the get request.
+     * @param event
+     * @return
+     */
     public static EventGet eventToDTO(Event event){
 
         EventGet eventGet = new EventGet();
@@ -34,6 +48,11 @@ public class ToDTO {
         return eventGet;
     }
 
+    /**
+     * Convert a user to a DTO for the get request
+     * @param user
+     * @return
+     */
     public static UserGet userToDTO(User user)
     {
         UserGet userGetTmp = new UserGet();
@@ -42,6 +61,11 @@ public class ToDTO {
         return  userGetTmp;
     }
 
+    /**
+     * Convert and application to a DTO for the get request
+     * @param application
+     * @return
+     */
     public static ApplicationGet applicationtoDTO(Application application){
 
         LinkedList<String> listBadgesUrl = new LinkedList<String>();
@@ -60,6 +84,12 @@ public class ToDTO {
 
         return appGetTmp;
     }
+
+    /**
+     * Convert a badge to a DTO for the get request
+     * @param badge
+     * @return
+     */
     public static BadgeGet badgetoDTO(Badge badge){
         BadgeGet badgeGet = new BadgeGet();
         badgeGet.setId(badge.getId());
@@ -69,6 +99,11 @@ public class ToDTO {
         return badgeGet;
     }
     
+    /**
+     * Convert a user and a badge to a DTO for the get request
+     * @param user
+     * @return
+     */
     public static UserAwardGet UserAwardToDTO(User user){
         
         List<Award> awardList = user.getListAward();
