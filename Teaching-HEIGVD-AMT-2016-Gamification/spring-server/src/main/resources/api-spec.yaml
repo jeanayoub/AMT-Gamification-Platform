@@ -240,7 +240,7 @@ paths:
             $ref: '#/definitions/ApplicationPost'
           required: true
       responses:
-        200:
+        201:
           description: Sends the modified application id
           schema:
             title: Applications
@@ -582,10 +582,6 @@ definitions:
   rulePost:
     type: object
     properties:
-      conditions:
-        type: array
-        items:
-          type: string
       eventType:
         type:  string
       awardBadgeId:
@@ -597,11 +593,6 @@ definitions:
       point:
         type: integer
         format: int64
-      properties:
-        type: array
-        items:
-          type: integer
-          format: int64
 
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # pointScale

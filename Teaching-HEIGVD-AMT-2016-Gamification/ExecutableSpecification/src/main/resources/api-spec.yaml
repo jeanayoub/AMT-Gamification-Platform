@@ -3,116 +3,724 @@ info:
   version: 1.0.0
   title: Gamification Platform API
   description: |
-    **This is the documentation of the AMT Gamification Platform API**
+   **This is the documentation of the AMT Gamification Platform API**
 host: localhost:8090
 basePath: /api
 schemes:
   - http
   - https
+consumes:
+  - application/json
+produces:
+  - application/json
 paths:
-  /applications:
+
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# event
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
+  /events:
+    post:
+      parameters:
+        - name: eventDTO
+          in: body
+          description: The info required to create an event
+          schema:
+            $ref: '#/definitions/EventPost'
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+
+      responses:
+        201:
+          description: Make a new event
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# badge
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
+  /badges:
     get:
-      produces:
-        - application/json
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
       responses:
         200:
-          description:  List all registered applications
+          description:  List all badges
           schema:
-            title: Registration summary
+            title: Badges
+            type: array
+            items:
+              $ref: '#/definitions/BadgeGet'
+    post:
+      parameters:
+        - name: badge
+          in: body
+          description: The info required to create a badge
+          schema:
+            $ref: '#/definitions/BadgePost'
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+
+      responses:
+        201:
+          description: Make a new badge
+  /badges/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: ID of the badge
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description: Sends the badge with badge Id
+          schema:
+            title: Badges
+            type: object
+            items:
+              $ref: '#/definitions/BadgeGet'
+        404:
+          description: Badge not found
+    put:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the badge to modify
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true 
+        - name: badge
+          in: body
+          description: The new values for an existing badge
+          schema:
+            $ref: '#/definitions/BadgePost'
+          required: true
+      responses:
+        200:
+          description: Sends the modified bagdge Id
+          schema:
+            title: Badges
+            type: object
+            items:
+              $ref: '#/definitions/BadgeGet'
+        404:
+          description: Badge not found
+    delete:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: ID of the badge to delete
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description: Delete the badge with badge id
+        404:
+          description: Badge not found
+
+
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# user
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  /users:
+    get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description:  List all users
+          schema:
+            title: users
+            type: array
+            items:
+              $ref: '#/definitions/UserGet'
+  /users/awards:
+    get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description:  List all users and their award
+          schema:
+            title: users
+            type: array
+            items:
+              $ref: '#/definitions/UserAwardGet'
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# application
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-          
+  /applications:
+    get:
+      responses:
+        200:
+          description:  List all applications
+          schema:
+            title: Applications
             type: array
             items:
               $ref: '#/definitions/ApplicationGet'
     post:
-      consumes:
-        - application/json
       parameters:
-        - name: body
+        - name: application
           in: body
-          description: The info required to register an application
+          description: The info required to create an application
           schema:
             $ref: '#/definitions/ApplicationPost'
           required: true
       responses:
         201:
-          description: Register a new application
-  /auth:
-    post:
-      operationId: authenticateApplicationAndGetToken
-      consumes:
-      - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: body
-          in: body
-          description: The info required to authenticate an application
-          schema:
-            $ref: '#/definitions/Credentials'
-          required: true
-      responses:
-        200:
-          description: Authentication sucessful
-          schema:
-            $ref: '#/definitions/Token'
-        401:
-          description: Authentication failed
-  /users/{id}:
+          description: Make a new application
+          
+  /applications/{id}:
     get:
-      description:  Retrieve one user by id
-      operationId: findUserById
       parameters:
-        - $ref: '#/parameters/TokenHeader'
         - name: id
           in: path
-          description: id of the user to fetch
+          type: integer
+          format: int64
+          description: id of the application
           required: true
-          type: string
-      produces:
-        - application/json
       responses:
         200:
-          description:
-              Returns the specified user state
+          description: Sends the application with application id
           schema:
-            $ref: '#/definitions/User'   
-  /events:
-    post:
-      description:  Report that a new event has happened in the gamified application
-      operationId: reportEvent
-      consumes:
-      - application/json
+            title: Applications
+            type: object
+            items:
+              $ref: '#/definitions/ApplicationGet'
+        404:
+          description: Application not found
+          
+    put:
       parameters:
-        - $ref: '#/parameters/TokenHeader'
-        - name: event
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the application to modify
+          required: true
+        - name: application
           in: body
-          description: The event that occured in the realm of the gamified application
+          description: The new values for an existing application
           schema:
-            $ref: '#/definitions/Event'
+            $ref: '#/definitions/ApplicationPost'
           required: true
       responses:
-        202:
-          description:
-              The platform has accepted the event and will process it (asynchronously)
+        201:
+          description: Sends the modified application id
           schema:
-            $ref: '#/definitions/Event'   
-definitions: 
-  RegistrationSummary:
+            title: Applications
+            type: object
+            items:
+              $ref: '#/definitions/ApplicationGet'
+        404:
+          description: Application not found
+          
+    delete:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the application to delete
+          required: true
+      responses:
+        200:
+          description: Delete the application with badge id
+        404:
+          description: Application not found
+  
+  /applications/{id}/badges/{idBadge}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the application
+          required: true
+        - name: idBadge
+          in: path
+          type: integer
+          format: int64
+          description: id of the badge
+          required: true
+      responses:
+        200:
+          description: Sends the detail of the badge with badge id of the application with application id
+          schema:
+            title: Badge
+            type: object
+            items:
+              $ref: '#/definitions/BadgeGet'
+        404:
+          description: Application or badge not found
+              
+  /applications/{id}/events:
+    get:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the application
+          required: true
+      responses:
+        200:
+          description: Sends all the event of the app defined by app id
+          schema:
+            title: Event
+            type: object
+            items:
+              $ref: '#/definitions/ApplicationEventGet'
+        404:
+          description: Application or event not found
+          
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# login
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
+  /login:
+    post:
+      parameters:
+        - name: loginInfo
+          in: body
+          description: The info required to login with on application
+          schema:
+            $ref: '#/definitions/LoginPost'
+          required: true
+      responses:
+        201:
+          description: token
+          schema:
+            title: token
+            type: object
+            items:
+              $ref: '#/definitions/LoginGet'
+        401:
+            description: Wrong login
+              
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# pointScale
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-            
+  /pointScales:
+    post:
+      parameters:
+        - name: pointScaleDTO
+          in: body
+          description: The info required to create a pointScale
+          schema:
+            $ref: '#/definitions/pointScalePost'
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+      responses:
+        201:
+          description: Make a new pointScale
+  
+    get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description:  PointScale list
+          schema:
+            title: pointScaleDTO
+            type: array
+            items:
+              $ref: '#/definitions/pointScaleGet'
+              
+  /pointScales/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the pointScale
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description: Info of the poinstScale
+          schema:
+            title: pointScaleDTO
+            type: object
+            items:
+              $ref: '#/definitions/pointScaleGet'
+        404:
+          description: PointScale not found
+          
+    put:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the pointScale to modify
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+        - name: pointScaleDTO
+          in: body
+          description: The new values for an existing pointScale
+          schema:
+            $ref: '#/definitions/pointScalePost'
+          required: true
+      responses:
+        200:
+          description: PointScale modified successfully
+          schema:
+            title: pointScaleDTO
+            type: object
+            items:
+              $ref: '#/definitions/pointScaleGet'
+        404:
+          description: PointScale not found
+          
+    delete:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the pointScale to delete
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description: PointScale deleted successfully
+        404:
+          description: PointScale not found
+          
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# rules
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-            
+  /rules:
+    post:
+      parameters:
+        - name: ruleDTO
+          in: body
+          description: The info required to create a rule
+          schema:
+            $ref: '#/definitions/rulePost'
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+      responses:
+        201:
+          description: Rule created successfully
+  
+    get:
+      parameters:
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description:  List all rules
+          schema:
+            title: ruleDTO
+            type: array
+            items:
+              $ref: '#/definitions/ruleGet'
+              
+  /rules/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the rule
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description: Rule infos
+          schema:
+            title: ruleDTO
+            type: object
+            items:
+              $ref: '#/definitions/ruleGet'
+        404:
+          description: Rule not found
+          
+    put:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the rule to modify
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+        - name: ruleDTO
+          in: body
+          description: The new values for an existing rule
+          schema:
+            $ref: '#/definitions/rulePost'
+          required: true
+      responses:
+        200:
+          description: Rule modified successfully
+          schema:
+            title: ruleDTO
+            type: object
+            items:
+              $ref: '#/definitions/ruleGet'
+        404:
+          description: Rule not found
+          
+    delete:
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          format: int64
+          description: id of the rule to delete
+          required: true
+        - name: token
+          in: header
+          type: string
+          description: token
+          required: true
+      responses:
+        200:
+          description: Rule deleted successfully
+        404:
+          description: Rule not found
+
+
+
+definitions:
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
+# rule
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
+
+  ruleGet:
     type: object
     properties:
+      applicationId:
+        type: integer
+        format: int64
       applicationName:
         type: string
- 
-  ApplicationPost:
+      eventType:
+        type: string
+      awardBadgeId:
+        type: integer
+        format: int64
+      awardPointScaleId:
+        type: integer
+        format: int64
+      numberOfPoint:
+        type: integer
+        format: int64
+  
+  rulePost:
+    type: object
+    properties:
+      eventType:
+        type:  string
+      awardBadgeId:
+        type: integer
+        format: int64
+      awardPointScaleId:
+        type: integer
+        format: int64
+      point:
+        type: integer
+        format: int64
+
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# pointScale
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-  
+  pointScalePost:
+    type: object
+    properties:
+      name:
+        type: string
+
+  pointScaleGet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      applicationId:
+        type: integer
+        format: int64
+      apllicationName:
+        type: string
+      
+ #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ # User
+ #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  UserGet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+  UserAwardGet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      awardList:
+        type: array
+        items:
+          type: object
+          properties:
+            awardType:
+              type: string
+            awardLocation:
+              type: string
+            awardDate:
+              type: string
+
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# event
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-         
+  EventGet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      userExtAppId:
+        type: integer
+        format: int64
+      eventType:
+        type: string
+      userId:
+        type: integer
+        format: int64
+
+  EventPost:
+    type: object
+    properties:
+      userAppId:
+        type: integer
+        format: int64
+      eventType:
+        type: string
+      properties:
+        type: array
+        items:
+          type: string
+      
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Login
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  LoginGet:
+    type: object
+    properties:
+      token:
+        type: string
+
+  
+  LoginPost:
     type: object
     properties:
       name:
         type: string
       password:
         type: string
+
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Badge
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  BadgeGet:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
       description:
         type: string
+      icon:
+        type: string
         
-        
+  BadgePost:
+    type: object
+    properties:
+      name:
+        type: string
+      description:
+        type: string
+      icon:
+        type: string
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Application
+#-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-   
   ApplicationGet:
     type: object
     properties:
@@ -126,45 +734,23 @@ definitions:
       badgesList:
         type: array
         items:
-          type: string      
+          type: string
         
-        
-        
-  Credentials:
+  ApplicationPost:
     type: object
     properties:
-      applicationName:
+      name:
         type: string
       password:
         type: string
-  Token:
+      description:
+        type: string
+        
+  ApplicationEventGet:
     type: object
     properties:
-      applicationName:
-        type: string
-  Event:
-    type: object
-    properties:
-      type:
-        type: string
-      userId:
-        type: string
-      timestamp:
-        type: string
-        format: date-time
-      properties:
-        type: object
-  User:
-    type: object
-    properties:
-      userId:
-        type: string
-      numberOfEvents:
-        type: integer
-parameters: 
-  TokenHeader:
-    description: token that identifies the application sending the request
-    name: X-Gamification-Token
-    in: header
-    required: true
-    type: string
+      eventList:
+        type: array
+        items:
+          type: object   
+          

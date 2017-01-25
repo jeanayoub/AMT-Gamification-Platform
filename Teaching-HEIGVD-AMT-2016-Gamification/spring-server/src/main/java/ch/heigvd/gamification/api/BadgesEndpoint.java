@@ -100,6 +100,8 @@ public class BadgesEndpoint implements BadgesApi {
             URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest().path("/{id}")
                         .buildAndExpand(badgeToCreate.getId()).toUri();
+            
+            System.out.println("cacacaca : " + badgeToCreate.getId());
 
             return ResponseEntity.created(location).build();
         }

@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 /**
  *
- * @author Olivier Liechti (olivier.liechti@heig-vd.ch)
+ * @author J. Ayoub
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(features="src/test/resources/scenarios/", plugin = {"pretty", "html:target/cucumber"})

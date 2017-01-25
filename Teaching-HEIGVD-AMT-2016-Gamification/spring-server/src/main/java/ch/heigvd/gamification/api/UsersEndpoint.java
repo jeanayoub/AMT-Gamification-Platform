@@ -35,9 +35,7 @@ public class UsersEndpoint implements UsersApi{
     public ResponseEntity<List<UserGet>> usersGet(@RequestHeader String token) {
         
         Application appTmp = applicationsRepository.findByName(token);
-        
-        System.out.println(appTmp);
-        
+               
         // If we didn't we find the application we cannot create the badge.
         if(appTmp != null) {
             
@@ -47,7 +45,7 @@ public class UsersEndpoint implements UsersApi{
             for(User user : listTmp){
                 listTmpDtoGet.add(ToDTO.userToDTO(user));
             }
-
+            
             return ResponseEntity.ok().body(listTmpDtoGet);
         }
         return  ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
@@ -64,6 +62,17 @@ public class UsersEndpoint implements UsersApi{
             LinkedList<User> listTmp = userRepository.findByApplicationId(appTmp.getId());
             LinkedList<UserAwardGet> listTmpDtoGet = new LinkedList<>();
 
+            // Bubble sort based on the total number of awards.          
+            for (int i = 0; i < listTmp.size(); i++) {
+                for (int j = 1; j < (listTmp.size() - i); j++) {
+                    if(listTmp.get(j - 1).getListAward().size() < listTmp.get(j).getListAward().size()){
+                        User tmp  = listTmp.get(j - 1);
+                        listTmp.set(j - 1, listTmp.get(j));
+                        listTmp.set(j, tmp);
+                    }
+                }
+            }
+            
             for(User user : listTmp){
                 listTmpDtoGet.add(ToDTO.UserAwardToDTO(user));
             }

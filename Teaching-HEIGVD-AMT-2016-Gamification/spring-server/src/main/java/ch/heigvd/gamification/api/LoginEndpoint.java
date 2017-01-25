@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
+<<<<<<< HEAD
 import org.springframework.http.HttpStatus;
+=======
+>>>>>>> a5cb1cb075f0d11cea6fffa9509e79e5d0cb990c
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController

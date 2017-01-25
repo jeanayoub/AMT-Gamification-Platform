@@ -73,7 +73,14 @@ public class PointScaleEndPoint implements PointScalesApi{
         // If we didn't we find the application we cannot create the badge.
         if(appTmp != null){
             if(pointScaleRepository.exists(id)){
-                return ResponseEntity.ok().body(pointScaleRepository.findOne(id));
+                
+                PointScale pointScaleTmp = pointScaleRepository.findById(id);
+                PointScaleGet tmpPS = new PointScaleGet();
+                tmpPS.setId(pointScaleTmp.getId());
+                tmpPS.setName(pointScaleTmp.getName());
+                tmpPS.setApllicationName(pointScaleTmp.getApplication().getName());
+                
+                return ResponseEntity.ok().body(tmpPS);
             }
             return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
         }
