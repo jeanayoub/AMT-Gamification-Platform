@@ -1,8 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Author : Aghamahdi Mohammad Hossein
+ *          Ayoub jean
+ *          Baehler Simon
+ *          Monzione Marco
+ * 
+ * Project : AMT-Gamification-platform
+ * 
+ * Date : 25.01.2017
+ *          
  */
+
 package ch.heigvd.gamification.model;
 
 import java.util.ArrayList;
@@ -12,11 +19,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-/**
- *
- * @author marco
- */
 
 @Entity
 public class Application {
