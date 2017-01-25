@@ -13,6 +13,8 @@ import ch.heigvd.gamification.api.dto.PointScalePost;
 import ch.heigvd.gamification.api.dto.PointScaleGet;
 import ch.heigvd.gamification.api.dto.RulePost;
 import ch.heigvd.gamification.api.dto.RuleGet;
+import ch.heigvd.gamification.api.dto.UserAwardGet;
+import ch.heigvd.gamification.api.dto.ApplicationEventGet;
 import ch.heigvd.gamification.api.dto.RegistrationSummary;
 import com.google.gson.internal.LinkedTreeMap;
 import cucumber.api.java.en.Given;
@@ -32,26 +34,28 @@ public class ApplicationSteps {
     private final DefaultApi  api      = new DefaultApi();
     private       ApiResponse response = null;
   
-    
     private int applicationsCounter = 1;
     private int badgesCounter       = 1;
     
-    
-    private ApplicationGet  applicationGet  = new ApplicationGet();
-    private ApplicationPost applicationPost = new ApplicationPost();
-    private BadgePost       badgePost       = new BadgePost();
-    private BadgeGet        badgeGet        = new BadgeGet();
-    private LoginPost       loginPost       = new LoginPost();
-    private EventPost       eventPost       = new EventPost();
-    private PointScalePost  pointScalePost  = new PointScalePost();
-    private RulePost        rulePost        = new RulePost();
-    private RuleGet         ruleGet         = new RuleGet();
+    private ApplicationGet      applicationGet  = new ApplicationGet();
+    private ApplicationPost     applicationPost = new ApplicationPost();
+    private BadgePost           badgePost       = new BadgePost();
+    private BadgeGet            badgeGet        = new BadgeGet();
+    private LoginPost           loginPost       = new LoginPost();
+    private EventPost           eventPost       = new EventPost();
+    private PointScalePost      pointScalePost  = new PointScalePost();
+    private RulePost            rulePost        = new RulePost();
+    private RuleGet             ruleGet         = new RuleGet();
+    private UserAwardGet        usersAwardGet   = new UserAwardGet();
+    private ApplicationEventGet appEventGet     = new ApplicationEventGet();
     
     private List<ApplicationGet> applications;
     private List<BadgeGet>       badges;
     private List<PointScaleGet>  pointScales;
     private List<RuleGet>        rules;
-    
+    private List<UserAwardGet>   userAward;
+    private List<ApplicationEventGet> appEventList;
+  
     private Long   id           = null;
     private Long   idBadge      = null;
     private Long   idPointScale = null;
@@ -423,8 +427,7 @@ public class ApplicationSteps {
     public void i_ask_for_the_event_with_a_GET_on_applications_id_events() throws Throwable {
         try {
             response = api.applicationsIdEventsGetWithHttpInfo(id);
-            statusCode = response.getStatusCode();
-            
+            statusCode = response.getStatusCode();  
         } catch (ApiException e) {
             statusCode = e.getCode();
             System.err.println(e.getCause());
@@ -458,13 +461,10 @@ public class ApplicationSteps {
         try {
             response = api.pointScalesPostWithHttpInfo(pointScalePost, token);
             statusCode = response.getStatusCode();
-            Map map = response.getHeaders();
-            String s = map.get("Location").toString();
-            s = s.substring(1, s.length()-1);
+            Map<String,List<String>> map = response.getHeaders();
+            String s = map.get("Location").get(0);
             String [] list = s.split("/");
             idPointScale = Long.valueOf(list[list.length - 1]);
-            
-            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew+++++++++++++++: " + idPointScale);
             
         } catch (ApiException e) {
             statusCode = e.getCode();
@@ -502,8 +502,7 @@ public class ApplicationSteps {
 
     @When("^I DELETE it using /pointScales/id endpoint$")
     public void i_DELETE_it_using_pointScales_id_endpoint() throws Throwable {
-        System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + token);
-            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + idPointScale);
+
         try { 
             response = api.pointScalesIdDeleteWithHttpInfo(idPointScale, token);
             statusCode = response.getStatusCode();
@@ -576,9 +575,8 @@ public class ApplicationSteps {
             response = api.rulesPostWithHttpInfo(rulePost, token);
             statusCode = response.getStatusCode();
             
-            Map map = response.getHeaders();
-            String s = map.get("Location").toString();
-            s = s.substring(1, s.length()-1);
+            Map<String,List<String>> map = response.getHeaders();
+            String s = map.get("Location").get(0);
             String [] list = s.split("/");
             idRule = Long.valueOf(list[list.length - 1]);
             
@@ -605,9 +603,6 @@ public class ApplicationSteps {
     @When("^I ask for the pointScale with a GET on the /rules/id endpoint$")
     public void i_ask_for_the_pointScale_with_a_GET_on_the_rules_id_endpoint() throws Throwable {
         try {
-            
-            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + token);
-            System.err.println("nelfnefnekwwnfewlnfewnlfnewldcnkldscnjdcjkdnewfknew-----------: " + idRule);
             response = api.rulesIdGetWithHttpInfo(idRule, token);
             statusCode = response.getStatusCode();
       
@@ -644,7 +639,7 @@ public class ApplicationSteps {
         String eventType = null;
         try {
             LinkedTreeMap ltp = (LinkedTreeMap) api.rulesIdGet(idPointScale, token);
-            eventType = (String)ltp.get("");
+            eventType = (String)ltp.get("eventType");
         } catch (ApiException e) {
             statusCode = e.getCode();
             System.err.println(e.getCause());
@@ -665,10 +660,107 @@ public class ApplicationSteps {
         }
     }
 /*******************************************************************************
-*******************************************************************************/
+*******************************************************************************/    
+    
+    
+    
+/*******************************************************************************
+* Simple Event Processing
+*******************************************************************************/      
+    @Given("^an application$")
+    public void an_application() throws Throwable {
+        i_have_an_application_in_my_database_with_a_id();
+    }
+
+    @Given("^a token for this application after a login$")
+    public void a_token_for_this_application_after_a_login() throws Throwable {
+        i_POST_it_to_the_login_endpoint();
+    }
+
+    @Given("^a Badge associated to that application$")
+    public void a_Badge_associated_to_that_application() throws Throwable {
+        badgePost.setName("b1");
+        badgePost.setDescription("description nulle");
+        badgePost.setIcon("icon transparente");
+        i_POST_it_to_the_badges_endpoint();
+    }
 
     
+
+    @Given("^a PointScale associated to that application$")
+    public void a_PointScale_associated_to_that_application() throws Throwable {
+        pointScalePost.setName("p1");
+        i_POST_it_to_the_pointScales_endpoint();
+    }
+
+    @Given("^a Rule associated to the event Like and the badge with (\\d+) points$")
+    public void a_Rule_associated_to_the_event_Like_and_the_badge_with_points(int arg1) throws Throwable {
+        rulePost.setPoint(new Long(arg1));
+        rulePost.setAwardBadgeId(idBadge);
+        rulePost.setEventType("Like");
+        i_POST_it_to_the_rules_endpoint();
+    }
+
+    @Given("^another Rule associated to the event Dislike and the pointScale with (\\d+) points$")
+    public void another_Rule_associated_to_the_event_Dislike_and_the_pointScale_with_points(int arg1) throws Throwable {
+        rulePost.setPoint(new Long(arg1));
+        rulePost.setAwardPointScaleId(idPointScale);
+        rulePost.setEventType("Dislike");
+        i_POST_it_to_the_rules_endpoint();
+    }
     
+    
+    
+    @When("^I POST (\\d+) Events Like for user u(\\d+)$")
+    public void i_POST_Events_Like_for_user_u(int arg1, int arg2) throws Throwable {
+        eventPost.setEventType("Like");
+        eventPost.setUserAppId(new Long(arg2));
+        try {
+            for (int i=0; i<arg1; i++) {
+                response = api.eventsPostWithHttpInfo(eventPost, token);
+                statusCode = response.getStatusCode();
+            }
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+    @When("^I POST (\\d+) Events Dislike for user u(\\d+)$")
+    public void i_POST_Events_Dislike_for_user_u(int arg1, int arg2) throws Throwable {
+        eventPost.setEventType("Dislike");
+        eventPost.setUserAppId(new Long(arg2));
+        try {
+            for (int i=0; i<arg1; i++) {
+                response = api.eventsPostWithHttpInfo(eventPost, token);
+                statusCode = response.getStatusCode();
+            }
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());  
+        }
+    }
+
+
+    @When("^I ask for the list of users$")
+    public void i_ask_for_the_list_of_users() throws Throwable {
+        try { 
+            response = api.usersAwardsGetWithHttpInfo(token);
+            statusCode = response.getStatusCode();
+            userAward = api.usersAwardsGet(token);
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+            System.err.println(e.getCause());
+        }
+    }
+
+    @Then("^I see that there is (\\d+) events$")
+    public void i_see_that_there_is_events(int arg1) throws Throwable {
+     ;// A faire
+}
+/*******************************************************************************
+*******************************************************************************/
+
     
 }
 
