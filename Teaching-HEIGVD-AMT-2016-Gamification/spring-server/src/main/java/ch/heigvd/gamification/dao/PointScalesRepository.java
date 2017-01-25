@@ -15,5 +15,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface PointScalesRepository extends CrudRepository <PointScale, Long> {
     LinkedList<PointScale> findAll();
+    PointScale findById(Long id);
     LinkedList<PointScale>findByApplicationId(Long id);
 }

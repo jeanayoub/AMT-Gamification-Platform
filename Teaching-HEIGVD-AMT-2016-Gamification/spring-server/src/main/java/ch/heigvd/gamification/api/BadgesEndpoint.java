@@ -100,6 +100,8 @@ public class BadgesEndpoint implements BadgesApi {
             URI location = ServletUriComponentsBuilder
                         .fromCurrentRequest().path("/{id}")
                         .buildAndExpand(badgeToCreate.getId()).toUri();
+            
+            System.out.println("cacacaca : " + badgeToCreate.getId());
 
             return ResponseEntity.created(location).build();
         }
@@ -145,7 +147,7 @@ public class BadgesEndpoint implements BadgesApi {
                                 .fromCurrentRequest().path("/{id}")
                                 .buildAndExpand(id).toUri();
 
-                return ResponseEntity.ok(location);
+                return ResponseEntity.status(HttpStatus.OK).body(location);
             }
             return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

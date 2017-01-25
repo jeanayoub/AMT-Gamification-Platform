@@ -330,6 +330,8 @@ paths:
             type: object
             items:
               $ref: '#/definitions/LoginGet'
+        401:
+          description: Wrong login
               
 #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 # pointScale

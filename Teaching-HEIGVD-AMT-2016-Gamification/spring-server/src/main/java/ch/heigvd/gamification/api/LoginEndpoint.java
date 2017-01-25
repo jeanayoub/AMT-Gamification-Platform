@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ch.heigvd.gamification.dao.ApplicationsRepository;
+import org.springframework.http.HttpStatus;
+
+
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -38,13 +41,12 @@ public class LoginEndpoint implements LoginApi{
             if(appTmp.getPassword().equalsIgnoreCase(loginInfo.getPassword())){
                 
                 loginGet.setToken(appTmp.getName()); 
-                return ResponseEntity.ok().body(loginGet);
+                return ResponseEntity.status(HttpStatus.OK).body(loginGet);
             }
-            
         }
         
         loginGet.setToken("");
-        return ResponseEntity.ok().body(loginGet);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginGet);
     }
     
 }
