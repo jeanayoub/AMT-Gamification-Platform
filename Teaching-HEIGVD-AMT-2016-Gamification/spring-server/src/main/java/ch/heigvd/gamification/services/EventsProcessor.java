@@ -30,6 +30,8 @@ public class EventsProcessor {
     PointScalesRepository pointScaleRepository;
     AwardsRepository awardRepository;
 
+    //This should be used, but it did't work, all the repository stay "Null".
+    
    /* @Autowired
     EventsProcessor(RuleRepository ruleRepository, ApplicationRepository applicationRepository, BadgesRepository badgesRepository, PointScaleRepository pointScaleRepository, UserRepository userRepository, ProgressionRepository progressionRepository) {
             this.ruleRepository = ruleRepository;
@@ -40,6 +42,8 @@ public class EventsProcessor {
             this.progressionRepository = progressionRepository;
             
     }*/
+    
+    // Only here to allow the application to "work"
     public EventsProcessor(UsersRepository userRepository, ApplicationsRepository applicationRepository, AwardsRepository awardRepository, PointScalesRepository pointScaleRepository) {
         this.userRepository = userRepository;
         this.applicationRepository = applicationRepository;
